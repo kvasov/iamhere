@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iamhere/features/home/presentation/screens/home_screen.dart';
+import 'package:iamhere/features/place/presentation/screens/place_screen.dart';
 import 'package:iamhere/features/profile/presentation/screens/sign_in_screen.dart';
 import 'package:iamhere/features/profile/presentation/screens/sign_up_screen.dart';
 import 'package:iamhere/features/splash/presentation/screens/splash_screen.dart';
@@ -40,7 +41,7 @@ class AppTransitionPage<T extends Object?> extends CustomTransitionPage<T> {
 
             // Если есть bottom navigation bar, применяем переходы только к body Scaffold
             if (showBottomNavBar && currentLocation != null) {
-              debugPrint('🔵 AppTransitionPage: showBottomNavBar=$showBottomNavBar, currentLocation=$currentLocation, child=${child.runtimeType}');
+              // debugPrint('🔵 AppTransitionPage: showBottomNavBar=$showBottomNavBar, currentLocation=$currentLocation, child=${child.runtimeType}');
 
               // child должен быть Scaffold из экрана
               Widget? scaffoldBody;
@@ -54,11 +55,11 @@ class AppTransitionPage<T extends Object?> extends CustomTransitionPage<T> {
                 scaffoldAppBar = child.appBar;
                 scaffoldBackgroundColor = child.backgroundColor;
                 scaffoldResizeToAvoidBottomInset = child.resizeToAvoidBottomInset;
-                debugPrint('🔵 AppTransitionPage: Извлечены свойства из Scaffold');
+                // debugPrint('🔵 AppTransitionPage: Извлечены свойства из Scaffold');
               } else {
                 // Если child не Scaffold, используем его как body
                 scaffoldBody = child;
-                debugPrint('🔵 AppTransitionPage: child не Scaffold, используем как body');
+                // debugPrint('🔵 AppTransitionPage: child не Scaffold, используем как body');
               }
 
               // Применяем переходы только к body, а не к самому Scaffold
@@ -205,6 +206,12 @@ class AppRouter {
         showBottomNavBar: true,
       ),
       buildRoute(
+        path: '/place/:placeId',
+        name: 'place',
+        child: const PlaceScreen(),
+        showBottomNavBar: true,
+      ),
+      buildRoute(
         path: '/profile',
         name: 'profile',
         child: const ProfileScreen(),
@@ -220,7 +227,7 @@ class AppRouter {
         path: '/sign-in',
         name: 'sign-in',
         child: const SignInScreen(),
-        showBottomNavBar: true,
+        // showBottomNavBar: true,
       ),
       buildRoute(
         path: '/sign-up',

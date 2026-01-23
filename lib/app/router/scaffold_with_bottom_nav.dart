@@ -44,50 +44,57 @@ class ScaffoldWithBottomAppBar extends StatelessWidget {
   Widget _buildBottomAppBar(BuildContext context) {
     final currentIndex = _getCurrentIndex(currentLocation);
 
-    return BottomAppBar(
-      shape: IslandSmoothBezierNotchedShape(
-        horizontalMargin: 16,
-        borderRadius: 20,
-        notchMargin: 8,
-        // shoulderWidth: bottomBarShoulderWidth,
-      ),
-      notchMargin: 6,
-      height: 48,
-      color: Color.fromARGB(255, 35, 73, 145),
-      elevation: 0,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          // Элементы слева от центра (где будет FloatingActionButton)
-          _buildNavItem(
-            context,
-            icon: Icons.home,
-            index: 0,
-            isSelected: currentIndex == 0,
+    return SafeArea(
+      child: BottomAppBar(
+        shape: IslandSmoothBezierNotchedShape(
+          horizontalMargin: 16,
+          borderRadius: 20,
+          notchMargin: 8,
+          // shoulderWidth: bottomBarShoulderWidth,
+        ),
+        // shape: CircularNotchedRectangle(),
+        notchMargin: 6,
+        height: 48,
+        padding: EdgeInsets.only(top: 0, bottom: 0),
+        color: Color.fromARGB(255, 35, 73, 145),
+        elevation: 0,
+        child: Padding(
+          padding: const .symmetric(horizontal: 24.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // Элементы слева от центра (где будет FloatingActionButton)
+              _buildNavItem(
+                context,
+                icon: Icons.home,
+                index: 0,
+                isSelected: currentIndex == 0,
+              ),
+              _buildNavItem(
+                context,
+                icon: Icons.person,
+                index: 1,
+                isSelected: currentIndex == 1,
+              ),
+              // Spacer для создания пространства под FloatingActionButton
+              const SizedBox(width: 56), // Ширина FloatingActionButton
+              // Элементы справа от центра
+              _buildNavItem(
+                context,
+                icon: Icons.settings,
+                index: 2,
+                isSelected: currentIndex == 2,
+              ),
+              _buildNavItem(
+                context,
+                icon: Icons.settings,
+                index: 2,
+                isSelected: currentIndex == 2,
+              ),
+            ],
           ),
-          _buildNavItem(
-            context,
-            icon: Icons.person,
-            index: 1,
-            isSelected: currentIndex == 1,
-          ),
-          // Spacer для создания пространства под FloatingActionButton
-          const SizedBox(width: 56), // Ширина FloatingActionButton
-          // Элементы справа от центра
-          _buildNavItem(
-            context,
-            icon: Icons.settings,
-            index: 2,
-            isSelected: currentIndex == 2,
-          ),
-          _buildNavItem(
-            context,
-            icon: Icons.settings,
-            index: 2,
-            isSelected: currentIndex == 2,
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -98,20 +105,14 @@ class ScaffoldWithBottomAppBar extends StatelessWidget {
     required int index,
     required bool isSelected,
   }) {
-    return Material(
-      color: Colors.transparent,
-      child: InkResponse(
-        onTap: () => _onItemTapped(context, index),
-        radius: 16,
-        splashColor: Colors.white.withOpacity(0.2),
-        highlightColor: Colors.white.withOpacity(0.1),
-        child: SizedBox(
-          width: 56,
-          height: 56,
-          child: Icon(
-            icon,
-            color: isSelected ? Colors.white : Colors.white70,
-          ),
+    return GestureDetector(
+      onTap: () => _onItemTapped(context, index),
+      child: SizedBox(
+        width: 48,
+        height: 48,
+        child: Icon(
+          icon,
+          color: isSelected ? Colors.white : Colors.white70,
         ),
       ),
     );
@@ -274,13 +275,11 @@ class ScaffoldWithBottomAppBar extends StatelessWidget {
 
 class IslandSmoothBezierNotchedShape extends NotchedShape {
   final double horizontalMargin;
-  final double bottomMargin;
   final double borderRadius;
   final double notchMargin;
 
   const IslandSmoothBezierNotchedShape({
     this.horizontalMargin = 16,
-    this.bottomMargin = 16,
     this.borderRadius = 20,
     this.notchMargin = 8,
   });
@@ -337,14 +336,14 @@ class IslandSmoothBezierNotchedShape extends NotchedShape {
         Offset(host.right - horizontalMargin, host.top + borderRadius),
         radius: Radius.circular(borderRadius),
       )
-      ..lineTo(host.right - horizontalMargin, host.bottom - borderRadius - bottomMargin)
+      ..lineTo(host.right - horizontalMargin, host.bottom - borderRadius)
       ..arcToPoint(
-        Offset(host.right - horizontalMargin - borderRadius, host.bottom - bottomMargin),
+        Offset(host.right - horizontalMargin - borderRadius, host.bottom),
         radius: Radius.circular(borderRadius),
       )
-      ..lineTo(host.left + horizontalMargin + borderRadius, host.bottom - bottomMargin)
+      ..lineTo(host.left + horizontalMargin + borderRadius, host.bottom)
       ..arcToPoint(
-        Offset(host.left + horizontalMargin, host.bottom - borderRadius - bottomMargin),
+        Offset(host.left + horizontalMargin, host.bottom - borderRadius),
         radius: Radius.circular(borderRadius),
       )
       ..lineTo(host.left + horizontalMargin, host.top + borderRadius)

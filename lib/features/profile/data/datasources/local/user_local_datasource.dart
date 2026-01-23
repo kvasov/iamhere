@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 abstract class UserLocalDataSource {
   Future<void> saveUserToken(String token);
   Future<String?> getUserToken();
-  // Future<void> removeToken();
+  Future<void> removeUserToken();
   // Future<bool> hasToken();
 }
 
@@ -46,14 +46,16 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
     }
   }
 
-  // @override
-  // Future<void> removeToken() async {
-  //   try {
-  //     await TokenStorage.removeToken();
-  //   } catch (e) {
-  //     throw Exception('Failed to remove token: $e');
-  //   }
-  // }
+  @override
+  Future<void> removeUserToken() async {
+    try {
+      await _database.delete(_database.users).go();
+      debugPrint('💚 UserLocalDataSourceImpl: removeUserToken success');
+    } catch (e) {
+      debugPrint('❌ UserLocalDataSourceImpl: removeUserToken error: $e');
+      throw Exception('Failed to remove token: $e');
+    }
+  }
 
   // @override
   // Future<bool> hasToken() async {

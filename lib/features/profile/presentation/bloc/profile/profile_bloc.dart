@@ -11,6 +11,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   ProfileBloc({required this.userRepository}) : super(ProfileInitial()) {
     on<ProfileLoadEvent>(_onProfileLoadEvent);
     on<ProfileSetIsAuthEvent>(_onProfileSetIsAuthEvent);
+    on<ProfileSignOutEvent>(_onProfileSignOutEvent);
   }
 
   Future<void> _onProfileLoadEvent(ProfileLoadEvent event, Emitter<ProfileState> emit) async {
@@ -33,5 +34,14 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
   Future<void> _onProfileSetIsAuthEvent(ProfileSetIsAuthEvent event, Emitter<ProfileState> emit) async {
     emit(ProfileLoaded(isAuth: event.isAuth));
+  }
+
+  Future<void> _onProfileSignOutEvent(ProfileSignOutEvent event, Emitter<ProfileState> emit) async {
+    final result = await userRepository.signOut();
+    if (result.isSuccess) {
+      emit(ProfileLoaded(isAuth: false));
+    } else {
+      emit(ProfileLoaded(isAuth: true));
+    }
   }
 }

@@ -57,6 +57,15 @@ class UserRepository {
     }
   }
 
+  RequestOperation<bool> signOut() async {
+    try {
+      await userLocalDataSource.removeUserToken();
+      return Result.ok(true);
+    } catch (e) {
+      return Result.error(Failure(description: 'Failed to sign out: $e'));
+    }
+  }
+
   Future<String?> getUserToken() async {
     try {
       return await userLocalDataSource.getUserToken();

@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
-import 'package:iamhere/features/home/presentation/bloc/places_bloc.dart';
+import 'package:iamhere/features/place/presentation/bloc/places_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
-class ListWidget extends StatefulWidget {
-  const ListWidget({super.key});
+class PlacesListWidget extends StatefulWidget {
+  const PlacesListWidget({super.key});
 
   @override
-  State<ListWidget> createState() => _ListWidgetState();
+  State<PlacesListWidget> createState() => _PlacesListWidgetState();
 }
 
-class _ListWidgetState extends State<ListWidget> {
+class _PlacesListWidgetState extends State<PlacesListWidget> {
   @override
   void initState() {
     super.initState();
@@ -78,14 +79,19 @@ class _ListWidgetState extends State<ListWidget> {
                   itemCount: state.items.length,
                   itemBuilder: (context, index) {
                     final place = state.items[index];
-                    return GFCard(
-                      content: ListTile(
-                        title: Text(place.name),
-                        subtitle: Text('ID: ${place.id}'),
-                        trailing: Text(
-                          place.country == 'Russia'
-                            ? "🇷🇺"
-                            : "🇪🇬"
+                    return GestureDetector(
+                      onTap: () {
+                        context.pushNamed('place', pathParameters: {'placeId': place.id.toString()});
+                      },
+                      child: GFCard(
+                        content: ListTile(
+                          title: Text(place.name),
+                          subtitle: Text('ID: ${place.id}'),
+                          trailing: Text(
+                            place.country == 'Russia'
+                              ? "🇷🇺"
+                              : "🇪🇬"
+                          ),
                         ),
                       ),
                     );

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iamhere/features/profile/presentation/bloc/profile/profile_bloc.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:go_router/go_router.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -34,6 +35,12 @@ class ProfileView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            context.pop();
+          },
+          icon: const Icon(Icons.arrow_back),
+        ),
         title: Text('Profile'),
       ),
       body: BlocBuilder<ProfileBloc, ProfileState>(
@@ -51,7 +58,7 @@ class ProfileView extends StatelessWidget {
                 GFButton(
                   text: 'Sign Out',
                   onPressed: () {
-                    context.read<ProfileBloc>().add(ProfileSetIsAuthEvent(isAuth: false));
+                    context.read<ProfileBloc>().add(ProfileSignOutEvent());
                   },
                 ),
               ],

@@ -10,3 +10,5 @@ class ProfileSetIsAuthEvent extends ProfileEvent {
 
   ProfileSetIsAuthEvent({required this.isAuth});
 }
+
+class ProfileSignOutEvent extends ProfileEvent {}

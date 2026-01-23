@@ -1,9 +1,9 @@
 import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
 
-import 'package:iamhere/features/home/presentation/bloc/places_bloc.dart';
-import 'package:iamhere/features/home/data/datasources/places_list.dart';
-import 'package:iamhere/features/home/data/repositories/todo_repository_impl.dart';
+import 'package:iamhere/features/place/presentation/bloc/places_bloc.dart';
+import 'package:iamhere/features/place/data/datasources/places_list.dart';
+import 'package:iamhere/features/place/data/repositories/places_repository_impl.dart';
 
 import 'package:iamhere/features/profile/data/repositories/user_repository.dart';
 import 'package:iamhere/features/profile/data/datasources/local/user_local_datasource.dart';
@@ -31,13 +31,7 @@ Future<void> init() async {
     return dio;
   });
 
-  sl.registerFactory(
-    () => PlacesBloc(
-      placesRepository: sl(),
-    ),
-  );
-
-  // Регистрируем ProfileBloc как singleton, чтобы использовать один экземпляр везде
+  sl.registerFactory(() => PlacesBloc(placesRepository: sl<PlacesRepository>()));
   sl.registerLazySingleton(() => ProfileBloc(userRepository: sl<UserRepository>()));
   sl.registerFactory(() => LocaleBloc());
   sl.registerFactory(() => ThemeBloc());

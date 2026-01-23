@@ -12,13 +12,23 @@ class PlacesRepository {
     required this.userLocalDataSource,
   });
 
-  RequestOperation<List<Place>> getTodos() async {
+  RequestOperation<List<Place>> getPlaces() async {
     try {
       final token = await userLocalDataSource.getUserToken();
       final response = await placesRemoteDataSource.getPlaces(token);
       return Result.ok(response);
     } catch (e) {
-      return Result.error(Failure(description: 'Failed to get todos: $e'));
+      return Result.error(Failure(description: 'Failed to get places: $e'));
+    }
+  }
+
+  RequestOperation<Place> getPlace(String placeId) async {
+    try {
+      final token = await userLocalDataSource.getUserToken();
+      final response = await placesRemoteDataSource.getPlace(token, placeId);
+      return Result.ok(response);
+    } catch (e) {
+      return Result.error(Failure(description: 'Failed to get place: $e'));
     }
   }
 }

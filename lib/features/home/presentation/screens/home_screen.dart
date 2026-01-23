@@ -3,8 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:iamhere/app/i18n/strings.g.dart';
 import 'package:go_router/go_router.dart';
-import 'package:iamhere/features/home/presentation/bloc/places_bloc.dart';
-import 'package:iamhere/features/home/presentation/widgets/list.dart';
+import 'package:iamhere/features/place/presentation/bloc/places_bloc.dart';
+import 'package:iamhere/features/place/presentation/widgets/places_list_screen.dart';
 import 'package:iamhere/core/di/injection_container.dart' as di;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iamhere/features/profile/presentation/bloc/profile/profile_bloc.dart';
@@ -68,7 +68,7 @@ class HomeView extends StatelessWidget {
                   },
                 ),
                 GFButton(
-                  text: 'Экран без BNB и списка мест (for testing purposes)',
+                  text: 'Экран без BNB',
                   icon: const Icon(Icons.import_export_sharp, size: 16, color: Colors.white),
                   onPressed: () {
                     context.push('/extra');
@@ -76,7 +76,7 @@ class HomeView extends StatelessWidget {
                 ),
                 SizedBox(
                   height: MediaQuery.of(context).size.height - 100,
-                  child: ListWidget(),
+                  child: PlacesListWidget(),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(16.0),

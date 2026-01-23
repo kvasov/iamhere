@@ -26,7 +26,7 @@ class AppDatabase extends _$AppDatabase {
   int get schemaVersion => 2;
 
   /// Удаляет файл базы данных
-  /// Используйте этот метод для удаления БД при изменении схемы в разработке
+  /// Удаление БД при изменении схемы в разработке
   static Future<void> deleteDatabase() async {
     try {
       final directory = await getApplicationSupportDirectory();
@@ -60,7 +60,6 @@ class AppDatabase extends _$AppDatabase {
         // database files in `getApplicationDocumentsDirectory()`.
         databaseDirectory: getApplicationSupportDirectory,
       ),
-      // If you need web support, see https://drift.simonbinder.eu/platforms/web/
     );
   }
 }

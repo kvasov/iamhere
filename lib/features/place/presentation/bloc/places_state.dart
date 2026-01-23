@@ -17,3 +17,19 @@ final class PlacesError extends PlacesState {
 
   PlacesError({required this.message});
 }
+
+
+
+final class PlaceLoading extends PlacesState {}
+
+final class PlaceLoaded extends PlacesState {
+  final Place place;
+
+  PlaceLoaded({required this.place});
+}
+
+final class PlaceError extends PlacesState {
+  final String message;
+
+  PlaceError({required this.message});
+}

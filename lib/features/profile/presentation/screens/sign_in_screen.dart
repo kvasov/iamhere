@@ -56,6 +56,9 @@ class _SignInScreenState extends State<SignInScreen> {
                     SnackBar(
                       content: Text('Sign in successful'),
                       backgroundColor: Colors.green,
+                      behavior: .floating,
+                      elevation: 0,
+                      margin: .only(bottom: 10, left: 16, right: 16),
                     ),
                   );
                 }
@@ -66,6 +69,9 @@ class _SignInScreenState extends State<SignInScreen> {
                     SnackBar(
                       content: Text(state.message),
                       backgroundColor: Colors.red,
+                      behavior: .floating,
+                      elevation: 0,
+                      margin: .only(bottom: 10, left: 16, right: 16),
                     ),
                   );
                 }
