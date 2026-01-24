@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iamhere/features/profile/presentation/bloc/profile/profile_bloc.dart';
+import 'package:iamhere/features/profile/presentation/widgets/profile/update/user_form.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:go_router/go_router.dart';
 
@@ -43,7 +44,27 @@ class ProfileView extends StatelessWidget {
         ),
         title: Text('Profile'),
       ),
-      body: BlocBuilder<ProfileBloc, ProfileState>(
+      body: BlocConsumer<ProfileBloc, ProfileState>(
+        listener: (context, state) {
+          if (state is ProfileUpdateSuccess) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                behavior: .floating,
+                content: Text('Profile updated successfully'),
+                backgroundColor: Colors.green,
+              ),
+            );
+          }
+          if (state is ProfileFailure) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                behavior: .floating,
+                content: Text(state.message),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+        },
         builder: (context, state) {
           if (state is ProfileLoading) {
             return const Center(child: CircularProgressIndicator());
@@ -52,9 +73,12 @@ class ProfileView extends StatelessWidget {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text('Profile'),
-                Text('Login: ${state.login}'),
-                Text('Name: ${state.name}'),
+                UserForm(state: state),
+                // Text('Profile'),
+                // Text('UserId: ${state.userId}'),
+                // Text('Login: ${state.login}'),
+                // Text('Name: ${state.name}'),
+                // Text('PhotoPath: ${state.photoPath}'),
                 GFButton(
                   text: 'Sign Out',
                   onPressed: () {
@@ -65,7 +89,7 @@ class ProfileView extends StatelessWidget {
             );
           }
           return const Center(child: CircularProgressIndicator());
-        },
+        }
       ),
     );
   }

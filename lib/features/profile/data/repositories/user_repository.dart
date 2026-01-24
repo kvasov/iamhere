@@ -87,6 +87,25 @@ class UserRepository {
     }
   }
 
+  RequestOperation<Map<String, dynamic>> updateUserInfo({
+    required String userId,
+    required String name,
+    required String password,
+    required String passwordConfirm,
+    String? photoPath,
+  }) async {
+    final token = await userLocalDataSource.getUserToken();
+    if (token == null) {
+      return Result.error(Failure(description: 'No token found'));
+    }
+    try {
+      final response = await userRemoteDataSource.updateUserInfo(token, userId, name, password, passwordConfirm, photoPath: photoPath);
+      return Result.ok(response);
+    } catch (e) {
+      return Result.error(Failure(description: 'Failed to update user info: $e'));
+    }
+  }
+
   // @override
   // Future<Either<Failure, bool>> isAuthenticated() async {
   //   try {

@@ -22,6 +22,7 @@ dependencies:
   slang_flutter: ^4.8.0
   getwidget: ^7.0.0
   shared_preferences:
+  image_picker: ^1.1.2
 
 dev_dependencies:
   flutter_test:

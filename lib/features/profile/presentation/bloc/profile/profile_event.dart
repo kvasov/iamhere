@@ -12,3 +12,17 @@ class ProfileSetIsAuthEvent extends ProfileEvent {
 }
 
 class ProfileSignOutEvent extends ProfileEvent {}
+
+class ProfileUpdateEvent extends ProfileEvent {
+  final String name;
+  final String password;
+  final String passwordConfirm;
+  final String? photoPath;
+
+  ProfileUpdateEvent({
+    required this.name,
+    required this.password,
+    required this.passwordConfirm,
+    this.photoPath,
+  });
+}

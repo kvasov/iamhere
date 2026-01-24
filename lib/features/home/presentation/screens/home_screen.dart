@@ -8,7 +8,6 @@ import 'package:iamhere/features/place/presentation/widgets/places_list_screen.d
 import 'package:iamhere/core/di/injection_container.dart' as di;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iamhere/features/profile/presentation/bloc/profile/profile_bloc.dart';
-import 'package:iamhere/shared/widgets/blur_gradient.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -55,53 +54,48 @@ class HomeView extends StatelessWidget {
         toolbarHeight: 30,
         actionsPadding: .only(right: 16),
       ),
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            child: Column(
-              children: [
-                GFButton(
-                  text: 'Profile',
-                  icon: const Icon(Icons.person, size: 16, color: Colors.white),
-                  onPressed: () {
-                    context.push('/profile');
-                  },
-                ),
-                GFButton(
-                  text: 'Экран без BNB',
-                  icon: const Icon(Icons.import_export_sharp, size: 16, color: Colors.white),
-                  onPressed: () {
-                    context.push('/extra');
-                  }
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height - 100,
-                  child: PlacesListWidget(),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: GFButton(
-                    text: t.etc.section.string_2,
-                    icon: const Icon(Icons.settings, size: 16, color: Colors.white),
-                    onPressed: () {
-                      context.push('/settings');
-                    },
-                  ),
-                ),
-                Image.asset('assets/images/1.jpg', fit: BoxFit.cover),
-                // BlocBuilder<ProfileBloc, ProfileState>(
-                //   builder: (context, state) {
-                //     if (state is ProfileLoaded) {
-                //       return Text('isAuth: ${state.isAuth}');
-                //     }
-                //     return const Text('State is not loaded');
-                //   },
-                // )
-              ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            GFButton(
+              text: 'Profile',
+              icon: const Icon(Icons.person, size: 16, color: Colors.white),
+              onPressed: () {
+                context.push('/profile');
+              },
             ),
-          ),
-          BlurGradientWidget(height: 60, sigma: 10, opacity: 0.8),
-        ],
+            GFButton(
+              text: 'Экран без BNB',
+              icon: const Icon(Icons.import_export_sharp, size: 16, color: Colors.white),
+              onPressed: () {
+                context.push('/extra');
+              }
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height - 100,
+              child: PlacesListWidget(),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: GFButton(
+                text: t.etc.section.string_2,
+                icon: const Icon(Icons.settings, size: 16, color: Colors.white),
+                onPressed: () {
+                  context.push('/settings');
+                },
+              ),
+            ),
+            Image.asset('assets/images/1.jpg', fit: BoxFit.cover),
+            BlocBuilder<ProfileBloc, ProfileState>(
+              builder: (context, state) {
+                if (state is ProfileLoaded) {
+                  return Text('isAuth: ${state.isAuth}, login: ${state.login}, name: ${state.name}, userId: ${state.userId}');
+                }
+                return const Text('State is not loaded');
+              },
+            )
+          ],
+        ),
       ),
     );
   }

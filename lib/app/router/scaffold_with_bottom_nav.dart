@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iamhere/shared/widgets/blur_gradient.dart';
 
 /// Scaffold с bottom app bar, который остается на месте при переходах
 /// Извлекает AppBar и body из дочернего Scaffold и создает новый Scaffold с bottomAppBar
@@ -44,58 +45,63 @@ class ScaffoldWithBottomAppBar extends StatelessWidget {
   Widget _buildBottomAppBar(BuildContext context) {
     final currentIndex = _getCurrentIndex(currentLocation);
 
-    return SafeArea(
-      child: BottomAppBar(
-        shape: IslandSmoothBezierNotchedShape(
-          horizontalMargin: 16,
-          borderRadius: 20,
-          notchMargin: 8,
-          // shoulderWidth: bottomBarShoulderWidth,
-        ),
-        // shape: CircularNotchedRectangle(),
-        notchMargin: 6,
-        height: 48,
-        padding: EdgeInsets.only(top: 0, bottom: 0),
-        color: Color.fromARGB(255, 35, 73, 145),
-        elevation: 0,
-        child: Padding(
-          padding: const .symmetric(horizontal: 24.0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // Элементы слева от центра (где будет FloatingActionButton)
-              _buildNavItem(
-                context,
-                icon: Icons.home,
-                index: 0,
-                isSelected: currentIndex == 0,
+    return Stack(
+      children: [
+        BlurGradientWidget(height: 60, sigma: 10, opacity: 0.8),
+        SafeArea(
+          child: BottomAppBar(
+            shape: IslandSmoothBezierNotchedShape(
+              horizontalMargin: 16,
+              borderRadius: 20,
+              notchMargin: 8,
+              // shoulderWidth: bottomBarShoulderWidth,
+            ),
+            // shape: CircularNotchedRectangle(),
+            notchMargin: 6,
+            height: 48,
+            padding: EdgeInsets.only(top: 0, bottom: 0),
+            color: Color.fromARGB(255, 35, 73, 145),
+            elevation: 0,
+            child: Padding(
+              padding: const .symmetric(horizontal: 24.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Элементы слева от центра (где будет FloatingActionButton)
+                  _buildNavItem(
+                    context,
+                    icon: Icons.home,
+                    index: 0,
+                    isSelected: currentIndex == 0,
+                  ),
+                  _buildNavItem(
+                    context,
+                    icon: Icons.person,
+                    index: 1,
+                    isSelected: currentIndex == 1,
+                  ),
+                  // Spacer для создания пространства под FloatingActionButton
+                  const SizedBox(width: 56), // Ширина FloatingActionButton
+                  // Элементы справа от центра
+                  _buildNavItem(
+                    context,
+                    icon: Icons.settings,
+                    index: 2,
+                    isSelected: currentIndex == 2,
+                  ),
+                  _buildNavItem(
+                    context,
+                    icon: Icons.settings,
+                    index: 2,
+                    isSelected: currentIndex == 2,
+                  ),
+                ],
               ),
-              _buildNavItem(
-                context,
-                icon: Icons.person,
-                index: 1,
-                isSelected: currentIndex == 1,
-              ),
-              // Spacer для создания пространства под FloatingActionButton
-              const SizedBox(width: 56), // Ширина FloatingActionButton
-              // Элементы справа от центра
-              _buildNavItem(
-                context,
-                icon: Icons.settings,
-                index: 2,
-                isSelected: currentIndex == 2,
-              ),
-              _buildNavItem(
-                context,
-                icon: Icons.settings,
-                index: 2,
-                isSelected: currentIndex == 2,
-              ),
-            ],
+            ),
           ),
-        ),
-      ),
+        )
+      ]
     );
   }
 
