@@ -52,11 +52,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   }
 
   Future<void> _onProfileUpdateEvent(ProfileUpdateEvent event, Emitter<ProfileState> emit) async {
-    final currentUserInfo = state is ProfileLoaded ? (state as ProfileLoaded) : null;
-    emit(ProfileLoading());
+    final current = state is ProfileLoaded ? (state as ProfileLoaded) : null;
+    emit(current?.copyWith(status: ProfileStatus.saving) ?? ProfileLoading());
 
     final result = await userRepository.updateUserInfo(
-      userId: currentUserInfo?.userId ?? '',
+      userId: current?.userId ?? '',
       name: event.name,
       password: event.password,
       passwordConfirm: event.passwordConfirm,
@@ -64,30 +64,18 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     );
 
     if (result.isSuccess) {
-      debugPrint('🤍 ProfileBloc _onProfileUpdateEvent - result.data: ${result.data}');
-      debugPrint('🤍 ProfileBloc _onProfileUpdateEvent - result.data тип: ${result.data?.runtimeType}');
-
-      if (result.data is Map) {
-        debugPrint('🤍 ProfileBloc _onProfileUpdateEvent - ключи в result.data: ${(result.data as Map).keys.toList()}');
-        if (result.data?['user'] is Map) {
-          debugPrint('🤍 ProfileBloc _onProfileUpdateEvent - ключи в result.data.user: ${(result.data?['user'] as Map).keys.toList()}');
-        }
-      }
-
-      // Проверяем разные возможные структуры ответа
       String photoPath = result.data?['photoPath'];
 
-      emit(ProfileUpdateSuccess());
-      emit(ProfileLoaded(
-        isAuth: true,
-        userId: currentUserInfo?.userId,
-        login: currentUserInfo?.login,
-        email: currentUserInfo?.email,
+      emit(current?.copyWith(
         name: event.name,
         photoPath: photoPath,
-      ));
+        status: ProfileStatus.success
+        ) ?? ProfileLoading()
+      );
     } else {
-      emit(ProfileFailure(message: result.error?.description ?? 'Update failed'));
+      emit(current?.copyWith(
+        status: ProfileStatus.error,
+      ) ?? ProfileLoading());
     }
   }
 }

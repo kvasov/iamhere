@@ -1,31 +1,31 @@
 import 'package:flutter/material.dart';
 
+/// Placeholder при фокусе скрывается.
+/// [hintText] — показывается когда нет фокуса
 InputDecoration textInputDecoration(
-  String labelText,
+  String? hintText,
   IconData prefixIcon, {
-  double? fontSize,
-  TextStyle? labelStyle,
   EdgeInsetsGeometry? contentPadding,
-  double? height,
 }) {
   return InputDecoration(
-    hintText: null,
-    labelText: labelText,
-    labelStyle: TextStyle(fontSize: 12.0),
-    contentPadding: .symmetric(horizontal: 12.0, vertical: 14.0),
+    hintText: hintText,
+    hintStyle: TextStyle(color: Colors.grey.shade600, fontSize: 16),
+    contentPadding: contentPadding ?? const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
     border: OutlineInputBorder(
       borderSide: BorderSide(color: Colors.grey.shade300),
+      borderRadius: BorderRadius.circular(30),
     ),
     enabledBorder: OutlineInputBorder(
       borderSide: BorderSide(color: Colors.grey.shade300),
+      borderRadius: BorderRadius.circular(30),
     ),
     focusedBorder: OutlineInputBorder(
       borderSide: BorderSide(color: Colors.grey.shade500),
+      borderRadius: BorderRadius.circular(30),
     ),
     filled: true,
     fillColor: Colors.white,
-    prefixIcon: Icon(prefixIcon),
-    constraints: BoxConstraints(minHeight: 60),
-
+    prefixIcon: Icon(prefixIcon, color: Colors.grey.shade600),
+    constraints: const BoxConstraints(minHeight: 60),
   );
 }

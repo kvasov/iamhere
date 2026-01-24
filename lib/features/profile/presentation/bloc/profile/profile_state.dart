@@ -1,5 +1,7 @@
 part of 'profile_bloc.dart';
 
+enum ProfileStatus { idle, saving, success, error }
+
 @immutable
 sealed class ProfileState {}
 
@@ -14,11 +16,38 @@ final class ProfileLoaded extends ProfileState {
   final String? email;
   final String? photoPath;
   final bool isAuth;
+  final ProfileStatus status;
 
-  ProfileLoaded({this.userId, this.login, this.name, this.email, this.photoPath, required this.isAuth });
+  ProfileLoaded({
+    this.userId,
+    this.login,
+    this.name,
+    this.email,
+    this.photoPath,
+    required this.isAuth,
+    this.status = ProfileStatus.idle,
+  });
+
+  ProfileLoaded copyWith({
+    String? userId,
+    String? login,
+    String? name,
+    String? email,
+    String? photoPath,
+    bool? isAuth,
+    ProfileStatus? status,
+  }) {
+    return ProfileLoaded(
+      userId: userId ?? this.userId,
+      login: login ?? this.login,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      photoPath: photoPath ?? this.photoPath,
+      isAuth: isAuth ?? this.isAuth,
+      status: status ?? this.status,
+    );
+  }
 }
-
-final class ProfileUpdateSuccess extends ProfileState {}
 
 final class ProfileFailure extends ProfileState {
   final String message;

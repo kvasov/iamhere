@@ -117,6 +117,7 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
         ),
         data: formData,
       );
+      await Future.delayed(const Duration(milliseconds: 500));
       return response.data;
     } on DioException catch (e) {
       throw Exception(e.response?.data['error'] ?? 'Network error');

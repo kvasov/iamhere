@@ -23,6 +23,7 @@ dependencies:
   getwidget: ^7.0.0
   shared_preferences:
   image_picker: ^1.1.2
+  flutter_animate: ^4.5.2
 
 dev_dependencies:
   flutter_test:

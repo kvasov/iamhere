@@ -46,7 +46,7 @@ class ProfileView extends StatelessWidget {
       ),
       body: BlocConsumer<ProfileBloc, ProfileState>(
         listener: (context, state) {
-          if (state is ProfileUpdateSuccess) {
+          if (state is ProfileLoaded && state.status == ProfileStatus.success) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
                 behavior: .floating,
@@ -55,11 +55,11 @@ class ProfileView extends StatelessWidget {
               ),
             );
           }
-          if (state is ProfileFailure) {
+          if (state is ProfileLoaded && state.status == ProfileStatus.error) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 behavior: .floating,
-                content: Text(state.message),
+                content: Text('Something went wrong'),
                 backgroundColor: Colors.red,
               ),
             );
