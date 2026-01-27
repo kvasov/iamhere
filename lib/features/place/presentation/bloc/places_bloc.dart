@@ -1,7 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:iamhere/features/place/data/repositories/places_repository_impl.dart';
-import 'package:iamhere/features/place/data/models/place.dart';
+import 'package:iamhere/features/place/data/models/place_dto.dart';
+import 'package:iamhere/features/place/domain/entities/place.dart';
 
 part 'places_event.dart';
 part 'places_state.dart';

@@ -84,14 +84,26 @@ class _PlacesListWidgetState extends State<PlacesListWidget> {
                         context.pushNamed('place', pathParameters: {'placeId': place.id.toString()});
                       },
                       child: GFCard(
-                        content: ListTile(
-                          title: Text(place.name),
-                          subtitle: Text('ID: ${place.id}'),
-                          trailing: Text(
-                            place.country == 'Russia'
-                              ? "🇷🇺"
-                              : "🇪🇬"
-                          ),
+                        content: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ListTile(
+                              title: Text(place.name),
+                              subtitle: Text('ID: ${place.id}'),
+                              trailing: Text(
+                                place.country == 'Russia'
+                                  ? "🇷🇺"
+                                  : "🇪🇬"
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                              child: Text(place.author?.name ?? ''),
+                            ),
+                            place.imageUrl != null
+                              ? Image.network('http://0.0.0.0:8080/${place.imageUrl}')
+                              : Image.asset('assets/images/placeholder.jpg'),
+                          ],
                         ),
                       ),
                     );

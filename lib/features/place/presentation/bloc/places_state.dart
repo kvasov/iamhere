@@ -7,7 +7,7 @@ final class PlacesInitial extends PlacesState {}
 final class PlacesLoading extends PlacesState {}
 
 final class PlacesLoaded extends PlacesState {
-  final List<Place> items;
+  final List<PlaceDTO> items;
 
   PlacesLoaded({required this.items});
 }
@@ -23,7 +23,7 @@ final class PlacesError extends PlacesState {
 final class PlaceLoading extends PlacesState {}
 
 final class PlaceLoaded extends PlacesState {
-  final Place place;
+  final PlaceModel place;
 
   PlaceLoaded({required this.place});
 }
