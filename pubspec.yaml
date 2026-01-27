@@ -24,6 +24,9 @@ dependencies:
   shared_preferences:
   image_picker: ^1.1.2
   flutter_animate: ^4.5.2
+  firebase_core: ^4.4.0
+  firebase_messaging: ^16.1.1
+  # flutter_local_notifications: ^20.0.0
 
 dev_dependencies:
   flutter_test:

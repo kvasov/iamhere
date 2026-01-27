@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iamhere/app/i18n/strings.g.dart';
@@ -12,8 +14,22 @@ import 'package:iamhere/shared/bloc/theme/theme_bloc.dart';
 import 'package:iamhere/app/theme/app_theme.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  print('🔔 Background message: ${message.messageId}');
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp();
+
+  FirebaseMessaging.onBackgroundMessage(
+    _firebaseMessagingBackgroundHandler,
+  );
 
   // Для разработки: раскомментируйте следующую строку, чтобы удалить БД при запуске
   // await AppDatabase.deleteDatabase();
@@ -70,6 +86,23 @@ class _MainAppState extends State<MainApp> {
     _router = AppRouter(
       profileBloc: profileBloc,
     ).router;
+
+    if (Platform.isAndroid) {
+      _initFCM();
+    }
+  }
+
+  Future<void> _initFCM() async {
+    final messaging = FirebaseMessaging.instance;
+
+    await messaging.requestPermission();
+
+    final token = await messaging.getToken();
+    print('📱 FCM Token: $token');
+
+    FirebaseMessaging.onMessage.listen((message) {
+      print('🔔 Foreground message: ${message.notification?.title}');
+    });
   }
 
   @override

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "606667184160",
+    "project_id": "iamhere-bccc4",
+    "storage_bucket": "iamhere-bccc4.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:606667184160:android:885cc093a142dde94a4445",
+        "android_client_info": {
+          "package_name": "com.example.iamhere"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpZcArZNBZ4LlRyZUtWAcWzMs6Jlve_XM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
