@@ -5,6 +5,7 @@ import 'package:iamhere/features/profile/presentation/bloc/sign_in/sign_in_bloc.
 import 'package:iamhere/shared/styles/text_input_styles.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iamhere/features/profile/presentation/widgets/profile/text_field_widget.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -84,11 +85,9 @@ class _SignInScreenState extends State<SignInScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    TextFormField(
-                      decoration: textInputDecoration(
-                        'Login',
-                        Icons.person,
-                      ),
+                    TextFieldWidget(
+                      hintText: 'Name',
+                      prefixIcon: Icons.person,
                       controller: loginController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -96,24 +95,20 @@ class _SignInScreenState extends State<SignInScreen> {
                         }
                         return null;
                       },
+                      staggerIndex: 0,
                     ),
                     const SizedBox(height: 16),
-                    TextFormField(
-                      decoration: textInputDecoration(
-                        'Password',
-                        Icons.password,
-                      ),
+                    TextFieldWidget(
+                      hintText: 'Password',
+                      prefixIcon: Icons.password,
                       controller: passwordController,
-                      obscureText: true,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Password is required';
                         }
-                        if (value.length < 6) {
-                          return 'Password must be at least 6 characters';
-                        }
                         return null;
                       },
+                      staggerIndex: 1,
                     ),
                     const SizedBox(height: 16),
                     BlocBuilder<SignInBloc, SignInState>(

@@ -2,7 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
 
 import 'package:iamhere/features/place/presentation/bloc/places_bloc.dart';
-import 'package:iamhere/features/place/data/datasources/places_list_datasource.dart';
+import 'package:iamhere/features/place/data/datasources/places_datasource.dart';
 import 'package:iamhere/features/place/data/repositories/places_repository_impl.dart';
 
 import 'package:iamhere/features/profile/data/repositories/user_repository.dart';

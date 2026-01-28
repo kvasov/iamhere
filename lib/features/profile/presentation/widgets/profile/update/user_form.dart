@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iamhere/features/profile/presentation/bloc/profile/profile_bloc.dart';
 import 'package:iamhere/features/profile/presentation/widgets/profile/update/avatar_widget.dart';
-import 'package:iamhere/features/profile/presentation/widgets/profile/update/text_field_widget.dart';
+import 'package:iamhere/features/profile/presentation/widgets/profile/text_field_widget.dart';
 import 'package:iamhere/shared/extensions/widget_animate_extensions.dart';
 import 'package:getwidget/getwidget.dart';
 

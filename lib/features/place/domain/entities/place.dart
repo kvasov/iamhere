@@ -1,5 +1,6 @@
 import 'package:iamhere/shared/domain/entities/user_model.dart';
 import 'package:iamhere/features/place/data/models/place_dto.dart';
+import 'package:iamhere/features/place/domain/entities/photo.dart';
 
 class PlaceModel {
   final int id;
@@ -9,6 +10,8 @@ class PlaceModel {
   final String address;
   final String name;
   final UserModel? author;
+  final String? imageUrl;
+  final List<PhotoModel>? photos;
 
   PlaceModel({
     required this.id,
@@ -18,19 +21,9 @@ class PlaceModel {
     required this.address,
     required this.name,
     this.author,
+    this.imageUrl,
+    this.photos,
   });
-
-  factory PlaceModel.fromJson(Map<String, dynamic> json) {
-    return PlaceModel(
-      id: json['id'] as int,
-      latitude: json['latitude'] as double,
-      longitude: json['longitude'] as double,
-      country: json['country'] as String,
-      address: json['address'] as String,
-      name: json['name'] as String,
-      author: UserModel.fromJson(json['author'] as Map<String, dynamic>),
-    );
-  }
 
   factory PlaceModel.fromDto(PlaceDTO dto) {
     return PlaceModel(
@@ -41,6 +34,10 @@ class PlaceModel {
       address: dto.address,
       name: dto.name,
       author: UserModel.fromDto(dto.author),
+      imageUrl: dto.imageUrl,
+      photos: dto.photos != null
+        ? (dto.photos as List).map((photo) => PhotoModel.fromDto(photo)).toList()
+        : null,
     );
   }
 }

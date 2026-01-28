@@ -1,10 +1,8 @@
-import '../datasources/places_list_datasource.dart';
-
-
+import 'package:flutter/material.dart';
+import '../datasources/places_datasource.dart';
 import 'package:iamhere/core/result.dart';
 import 'package:iamhere/features/profile/data/datasources/local/user_local_datasource.dart';
 import 'package:iamhere/features/place/domain/entities/place.dart';
-import 'package:iamhere/features/place/data/models/place_dto.dart';
 
 class PlacesRepository {
   final PlacesListRemoteDataSource placesRemoteDataSource;
@@ -15,7 +13,7 @@ class PlacesRepository {
     required this.userLocalDataSource,
   });
 
-  RequestOperation<List<PlaceDTO>> getPlaces() async {
+  RequestOperation<List<PlaceModel>> getPlaces() async {
     try {
       final token = await userLocalDataSource.getUserToken();
       final response = await placesRemoteDataSource.getPlaces(token);
@@ -31,6 +29,7 @@ class PlacesRepository {
       final response = await placesRemoteDataSource.getPlace(token, placeId);
       return Result.ok(response);
     } catch (e) {
+      debugPrint('error 💚🤍: $e');
       return Result.error(Failure(description: 'Failed to get place: $e'));
     }
   }
