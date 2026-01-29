@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:iamhere/core/constants/host.dart';
 import 'dart:io';
 
 class AvatarWidget extends StatefulWidget {
@@ -96,7 +97,7 @@ class _AvatarWidgetState extends State<AvatarWidget> {
                     )
                   : widget.photoPath != null
                       ? Image.network(
-                          'http://0.0.0.0:8080/${widget.photoPath!}',
+                          'http://${host}/${widget.photoPath!}',
                           width: 120,
                           height: 120,
                           fit: BoxFit.cover,

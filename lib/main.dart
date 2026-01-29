@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iamhere/app/i18n/strings.g.dart';
 import 'package:iamhere/app/router/app_router.dart';
-import 'package:iamhere/core/di/injection_container.dart' show init, sl;
+import 'package:iamhere/core/di/injection_container.dart';
 import 'package:iamhere/shared/bloc/locale/locale_bloc.dart';
 import 'package:iamhere/shared/bloc/locale/locale_event.dart';
 import 'package:iamhere/shared/bloc/locale/locale_state.dart';
@@ -34,7 +34,7 @@ void main() async {
   // Для разработки: раскомментируйте следующую строку, чтобы удалить БД при запуске
   // await AppDatabase.deleteDatabase();
 
-  await init();
+  await initDI();
 
   // Создаем ThemeBloc и загружаем тему через событие
   final themeBloc = sl<ThemeBloc>();

@@ -14,13 +14,14 @@ import 'package:iamhere/shared/bloc/locale/locale_bloc.dart';
 import 'package:iamhere/shared/bloc/theme/theme_bloc.dart';
 import 'package:iamhere/features/profile/presentation/bloc/sign_up/sign_up_bloc.dart';
 import 'package:iamhere/app/db/database.dart';
+import 'package:iamhere/core/constants/host.dart';
 
 final sl = GetIt.instance;
 
-Future<void> init() async {
+Future<void> initDI() async {
   sl.registerLazySingleton(() {
     final dio = Dio();
-    dio.options.baseUrl = 'http://0.0.0.0:8080/';
+    dio.options.baseUrl = 'http://${host}/';
     dio.options.connectTimeout = const Duration(seconds: 10);
     dio.options.receiveTimeout = const Duration(seconds: 10);
     dio.options.headers = {

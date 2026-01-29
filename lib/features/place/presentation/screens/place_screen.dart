@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:iamhere/core/di/injection_container.dart' as di;
 import 'package:iamhere/features/place/presentation/widgets/place_screen/place_appbar_1.dart';
 import 'package:iamhere/features/place/presentation/widgets/place_screen/place_appbar_2.dart';
+import 'package:iamhere/features/place/presentation/widgets/place_screen/map_view.dart';
 
 class PlaceScreen extends StatefulWidget {
   const PlaceScreen({super.key});
@@ -61,6 +62,10 @@ class _PlaceViewState extends State<PlaceView> {
               slivers: [
                 PlaceAppbar1(),
                 PlaceAppbar2(place: state.place),
+                SliverToBoxAdapter(
+                  // child: MapView(),
+                ),
+
                 SliverToBoxAdapter(
                   child: Container(
                     color: Colors.white,

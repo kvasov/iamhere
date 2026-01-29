@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iamhere/features/place/domain/entities/place.dart';
+import 'package:iamhere/core/constants/host.dart';
 
 class PlaceAppbar2 extends StatelessWidget {
   final PlaceModel place;
@@ -30,7 +31,7 @@ class PlaceAppbar2 extends StatelessWidget {
               fit: StackFit.expand,
               children: [
                 Image.network(
-                  'http://0.0.0.0:8080/${place.photos?.first.path}',
+                  'http://${host}/${place.photos?.first.path}',
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
                     return Image.asset('assets/images/placeholder.jpg');

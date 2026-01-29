@@ -3,6 +3,7 @@ import 'package:getwidget/getwidget.dart';
 import 'package:iamhere/features/place/presentation/bloc/places_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iamhere/core/constants/host.dart';
 
 class PlacesListWidget extends StatefulWidget {
   const PlacesListWidget({super.key});
@@ -101,7 +102,7 @@ class _PlacesListWidgetState extends State<PlacesListWidget> {
                               child: Text(place.author?.name ?? ''),
                             ),
                             place.imageUrl != null
-                              ? Image.network('http://0.0.0.0:8080/${place.imageUrl}')
+                              ? Image.network('http://${host}/${place.imageUrl}')
                               : Image.asset('assets/images/placeholder.jpg'),
                           ],
                         ),
