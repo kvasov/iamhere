@@ -47,7 +47,7 @@ class ScaffoldWithBottomAppBar extends StatelessWidget {
 
     return Stack(
       children: [
-        BlurGradientWidget(height: 60, sigma: 10, opacity: 0.8),
+        BlurGradientWidget(height: 60, sigma: 10, opacity: 0.0),
         SafeArea(
           child: BottomAppBar(
             shape: IslandSmoothBezierNotchedShape(

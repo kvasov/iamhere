@@ -3,8 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iamhere/features/place/presentation/bloc/places_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iamhere/core/di/injection_container.dart' as di;
-import 'package:iamhere/features/place/presentation/widgets/place_screen/place_appbar_1.dart';
-import 'package:iamhere/features/place/presentation/widgets/place_screen/place_appbar_2.dart';
+import 'package:iamhere/features/place/presentation/widgets/place_screen/place_head.dart';
 import 'package:iamhere/features/place/presentation/widgets/place_screen/map_view.dart';
 
 class PlaceScreen extends StatefulWidget {
@@ -33,6 +32,7 @@ class PlaceView extends StatefulWidget {
 
 class _PlaceViewState extends State<PlaceView> {
   String? _loadedPlaceId;
+  bool _isMapInteracting = false;
 
   @override
   Widget build(BuildContext context) {
@@ -58,13 +58,38 @@ class _PlaceViewState extends State<PlaceView> {
         }
         if (state is PlaceLoaded) {
           return Scaffold(
+            // backgroundColor: Colors.blueGrey,
             body: CustomScrollView(
+              physics: _isMapInteracting
+                  ? const NeverScrollableScrollPhysics()
+                  : null,
               slivers: [
-                PlaceAppbar1(),
-                PlaceAppbar2(place: state.place),
+                PlaceHead(place: state.place),
                 SliverToBoxAdapter(
-                  // child: MapView(),
+                  child: Listener(
+                    onPointerDown: (_) => setState(() => _isMapInteracting = true),
+                    onPointerUp: (_) => setState(() => _isMapInteracting = false),
+                    onPointerCancel: (_) => setState(() => _isMapInteracting = false),
+                    child: MapView(place: state.place),
+                  ),
                 ),
+
+                // SliverToBoxAdapter(
+                //   child: Container(
+                //     padding: const EdgeInsets.all(0),
+                //     margin: const EdgeInsets.all(0),
+                //     color: Colors.redAccent,
+                //     child: Column(
+                //       children: [
+                //         Text('Description'),
+                //         Text('Description'),
+                //         Text('Description'),
+                //         Text('Description'),
+                //       ],
+                //     ),
+                //   ),
+                // ),
+
 
                 SliverToBoxAdapter(
                   child: Container(
@@ -81,6 +106,7 @@ class _PlaceViewState extends State<PlaceView> {
                     ),
                   ),
                 ),
+
                 SliverFillRemaining(
                   hasScrollBody: true,
                   child: Container(
@@ -91,8 +117,8 @@ class _PlaceViewState extends State<PlaceView> {
                       ],
                     ),
                   ),
-
                 ),
+
                 // Padding(
                 //   padding: const EdgeInsets.all(16.0),
                 //   child: Column(

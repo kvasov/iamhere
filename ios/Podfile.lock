@@ -69,6 +69,8 @@ PODS:
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
+  - permission_handler_apple (9.3.0):
+    - Flutter
   - PromisesObjC (2.4.0)
   - shared_preferences_foundation (0.0.1):
     - Flutter
@@ -98,10 +100,10 @@ PODS:
     - sqlite3/perf-threadsafe
     - sqlite3/rtree
     - sqlite3/session
-  - yandex_maps_mapkit (1.0.0):
+  - yandex_mapkit (0.0.1):
     - Flutter
-    - YandexMapsMobile (= 4.30.0-beta-full-flutter)
-  - YandexMapsMobile (4.30.0-beta-full-flutter)
+    - YandexMapsMobile (= 4.22.0-full)
+  - YandexMapsMobile (4.22.0-full)
 
 DEPENDENCIES:
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
@@ -109,9 +111,10 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
+  - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
   - sqlite3_flutter_libs (from `.symlinks/plugins/sqlite3_flutter_libs/darwin`)
-  - yandex_maps_mapkit (from `.symlinks/plugins/yandex_maps_mapkit/ios`)
+  - yandex_mapkit (from `.symlinks/plugins/yandex_mapkit/ios`)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
@@ -138,12 +141,14 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/image_picker_ios/ios"
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
+  permission_handler_apple:
+    :path: ".symlinks/plugins/permission_handler_apple/ios"
   shared_preferences_foundation:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
   sqlite3_flutter_libs:
     :path: ".symlinks/plugins/sqlite3_flutter_libs/darwin"
-  yandex_maps_mapkit:
-    :path: ".symlinks/plugins/yandex_maps_mapkit/ios"
+  yandex_mapkit:
+    :path: ".symlinks/plugins/yandex_mapkit/ios"
 
 SPEC CHECKSUMS:
   Firebase: 9a58fdbc9d8655ed7b79a19cf9690bb007d3d46d
@@ -159,13 +164,14 @@ SPEC CHECKSUMS:
   image_picker_ios: e0ece4aa2a75771a7de3fa735d26d90817041326
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
   path_provider_foundation: bb55f6dbba17d0dccd6737fe6f7f34fbd0376880
+  permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   shared_preferences_foundation: 7036424c3d8ec98dfe75ff1667cb0cd531ec82bb
   sqlite3: 8d708bc63e9f4ce48f0ad9d6269e478c5ced1d9b
   sqlite3_flutter_libs: d13b8b3003f18f596e542bcb9482d105577eff41
-  yandex_maps_mapkit: 3e5bb5489524bbca00ab414460dc7c4b3b09b872
-  YandexMapsMobile: 3cb1d3250facba4cded2b91d2c041e1892e73f61
+  yandex_mapkit: b0468cf6fdc2e5ef315e08c081cb48763db1edee
+  YandexMapsMobile: 27e6e45425bb61f0be2dbc2bf02d4e64926691a9
 
-PODFILE CHECKSUM: 54d4b87c740db13554b7898f8a1980fa917f42c9
+PODFILE CHECKSUM: b8707505b95c7f27c7b1bbe13d18aba16a67061c
 
 COCOAPODS: 1.16.2
