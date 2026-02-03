@@ -17,24 +17,28 @@ class PlacePhotos extends StatelessWidget {
           ? SectionWidget (
               title: 'Фотографии',
               key: photosKey,
-              child: Container(
-                color: Color.fromARGB(255, 229, 229, 254),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ...photos.map(
-                      (photo) => Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
-                        child: Image.network(
-                          'http://$host/${photo.path}',
-                          fit: BoxFit.cover,
-                          width: double.infinity,
-                          errorBuilder: (_, __, ___) => const Icon(Icons.broken_image, size: 48),
-                        ),
-                      ),
+              child: GridView.builder(
+                padding: .zero,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 4,
+                  crossAxisSpacing: 4,
+                  mainAxisSpacing: 4,
+                  childAspectRatio: 1,
+                ),
+                itemCount: photos.length,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      debugPrint(photos[index].path);
+                    },
+                    child: Image.network(
+                      'http://$host/${photos[index].path}',
+                      fit: BoxFit.cover,
                     ),
-                  ],
-                )
+                  );
+                },
               )
             )
           : Container(
