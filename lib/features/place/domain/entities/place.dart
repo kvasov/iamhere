@@ -1,6 +1,7 @@
 import 'package:iamhere/shared/domain/entities/user_model.dart';
 import 'package:iamhere/features/place/data/models/place_dto.dart';
 import 'package:iamhere/features/place/domain/entities/photo.dart';
+import 'package:iamhere/features/place/domain/entities/review_model.dart';
 
 class PlaceModel {
   final int id;
@@ -12,6 +13,8 @@ class PlaceModel {
   final UserModel? author;
   final String? imageUrl;
   final List<PhotoModel>? photos;
+  final String? description;
+  final List<ReviewModel>? reviews;
 
   PlaceModel({
     required this.id,
@@ -23,6 +26,8 @@ class PlaceModel {
     this.author,
     this.imageUrl,
     this.photos,
+    this.description,
+    this.reviews,
   });
 
   factory PlaceModel.fromDto(PlaceDTO dto) {
@@ -38,6 +43,8 @@ class PlaceModel {
       photos: dto.photos != null
         ? (dto.photos as List).map((photo) => PhotoModel.fromDto(photo)).toList()
         : null,
+      description: dto.description,
+      reviews: dto.reviews ?? [],
     );
   }
 }

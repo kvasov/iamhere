@@ -1,11 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:iamhere/features/place/domain/entities/place.dart';
-import 'package:iamhere/core/constants/host.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iamhere/core/constants/host.dart';
+import 'package:iamhere/features/place/domain/entities/place.dart';
+import 'package:iamhere/features/place/presentation/etc/sections_enum.dart';
 
 class PlaceHead extends StatelessWidget {
   final PlaceModel place;
-  const PlaceHead({super.key, required this.place});
+  final VoidCallback onMapTap;
+  final VoidCallback onDescriptionTap;
+  final VoidCallback onPhotosTap;
+  final VoidCallback onReviewsTap;
+  final PlaceSection activeSection;
+
+  const PlaceHead({
+    super.key,
+    required this.place,
+    required this.onMapTap,
+    required this.onDescriptionTap,
+    required this.onPhotosTap,
+    required this.onReviewsTap,
+    required this.activeSection,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -14,14 +29,15 @@ class PlaceHead extends StatelessWidget {
         const expandedHeight = 200.0;
         const toolbarHeight = 40.0;
         const bottomMinHeight = 40.0;
-        const bottomMaxHeight = 50.0;
+        const bottomMaxHeight = 40.0;
         final collapsedHeight = toolbarHeight + bottomMinHeight;
 
         final currentHeight = expandedHeight - constraints.scrollOffset;
         // Вычисляем t на основе scroll offset
         final t = ((currentHeight - collapsedHeight) / (expandedHeight - collapsedHeight)).clamp(0.0, 1.0);
 
-        final bottomHeight = bottomMinHeight + (bottomMaxHeight - bottomMinHeight) * t;
+        // final bottomHeight = bottomMinHeight + (bottomMaxHeight - bottomMinHeight) * t;
+        final bottomHeight = bottomMinHeight;
 
         final titlePaddingLeft = 64 - 55 * t;
 
@@ -162,15 +178,38 @@ class PlaceHead extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  _NavLink(text: 'Описание', onTap: () {
-                    debugPrint('scroll to section 1');
-                  }),
-                  _NavLink(text: 'Отзывы', onTap: () {
-                    debugPrint('scroll to section 2');
-                  }),
-                  _NavLink(text: 'Контакты', onTap: () {
-                    debugPrint('scroll to section 3');
-                  }),
+                  _NavLink(
+                    text: 'Карта',
+                    active: activeSection == PlaceSection.map,
+                    onTap: () {
+                      debugPrint('scroll to section map');
+                      onMapTap();
+                    }
+                  ),
+                  _NavLink(
+                    text: 'Описание',
+                    active: activeSection == PlaceSection.description,
+                    onTap: () {
+                      debugPrint('scroll to section 1');
+                      onDescriptionTap();
+                    }
+                  ),
+                  _NavLink(
+                    text: 'Фото',
+                    active: activeSection == PlaceSection.photos,
+                    onTap: () {
+                      debugPrint('scroll to section 3');
+                      onPhotosTap();
+                    }
+                  ),
+                  _NavLink(
+                    text: 'Отзывы',
+                    active: activeSection == PlaceSection.reviews,
+                    onTap: () {
+                      debugPrint('scroll to section 2');
+                      onReviewsTap();
+                    }
+                  ),
                 ],
               ),
             ),
@@ -185,7 +224,12 @@ class PlaceHead extends StatelessWidget {
 class _NavLink extends StatelessWidget {
   final String text;
   final VoidCallback onTap;
-  const _NavLink({required this.text, required this.onTap});
+  final bool active;
+  const _NavLink({
+    required this.text,
+    required this.onTap,
+    required this.active,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -194,7 +238,9 @@ class _NavLink extends StatelessWidget {
       child: Text(
         text,
         style: TextStyle(
-          color: Colors.white,
+          color: active
+              ? Colors.white
+              : Colors.grey,
           fontSize: 16,
           fontWeight: FontWeight.w500,
         ),
