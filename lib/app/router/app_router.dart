@@ -238,7 +238,7 @@ class AppRouter {
         name: 'gallery',
         childBuilder: (state) {
           final extra = state.extra as Map<String, dynamic>?;
-          final urls = (extra?['urls'] as List<dynamic>?)?.map((e) => e as String).toList() ?? [];
+          final urls = (extra?['urls'] as List<dynamic>).map((e) => e as String).toList();
           final initialIndex = extra?['initialIndex'] as int? ?? 0;
           return GalleryScreen(imageUrls: urls, initialIndex: initialIndex);
         },
