@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iamhere/features/home/presentation/screens/home_screen.dart';
 import 'package:iamhere/features/place/presentation/screens/place_screen.dart';
+import 'package:iamhere/features/place/presentation/screens/gallery_screen.dart';
 import 'package:iamhere/features/profile/presentation/screens/sign_in_screen.dart';
 import 'package:iamhere/features/profile/presentation/screens/sign_up_screen.dart';
 import 'package:iamhere/features/splash/presentation/screens/splash_screen.dart';
@@ -124,6 +125,27 @@ GoRoute buildRoute({
   );
 }
 
+/// Маршрут с динамическим контентом из state (например, extra).
+GoRoute buildRouteWithState({
+  required String path,
+  required String name,
+  required Widget Function(GoRouterState state) childBuilder,
+  bool showBottomNavBar = false,
+}) {
+  return GoRoute(
+    path: path,
+    name: name,
+    pageBuilder: (context, state) {
+      return AppTransitionPage(
+        key: state.pageKey,
+        child: childBuilder(state),
+        showBottomNavBar: showBottomNavBar,
+        currentLocation: state.matchedLocation,
+      );
+    },
+  );
+}
+
 /// Конфигурация маршрутов приложения
 class AppRouter {
   final ProfileBloc profileBloc;
@@ -210,6 +232,16 @@ class AppRouter {
         name: 'place',
         child: const PlaceScreen(),
         showBottomNavBar: true,
+      ),
+      buildRouteWithState(
+        path: '/gallery',
+        name: 'gallery',
+        childBuilder: (state) {
+          final extra = state.extra as Map<String, dynamic>?;
+          final urls = (extra?['urls'] as List<dynamic>?)?.map((e) => e as String).toList() ?? [];
+          final initialIndex = extra?['initialIndex'] as int? ?? 0;
+          return GalleryScreen(imageUrls: urls, initialIndex: initialIndex);
+        },
       ),
       buildRoute(
         path: '/profile',
