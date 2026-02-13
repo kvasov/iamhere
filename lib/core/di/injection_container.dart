@@ -5,9 +5,9 @@ import 'package:iamhere/features/place/presentation/bloc/places_bloc.dart';
 import 'package:iamhere/features/place/data/datasources/places_datasource.dart';
 import 'package:iamhere/features/place/data/repositories/places_repository_impl.dart';
 
-import 'package:iamhere/features/profile/data/repositories/user_repository.dart';
-import 'package:iamhere/features/profile/data/datasources/local/user_local_datasource.dart';
-import 'package:iamhere/features/profile/data/datasources/remote/user_remote_datasource.dart';
+import 'package:iamhere/shared/data/user/repositories/user_repository.dart';
+import 'package:iamhere/shared/data/user/datasources/local/user_local_datasource.dart';
+import 'package:iamhere/shared/data/user/datasources/remote/user_remote_datasource.dart';
 import 'package:iamhere/features/profile/presentation/bloc/sign_in/sign_in_bloc.dart';
 import 'package:iamhere/features/profile/presentation/bloc/profile/profile_bloc.dart';
 import 'package:iamhere/shared/bloc/locale/locale_bloc.dart';
@@ -15,6 +15,7 @@ import 'package:iamhere/shared/bloc/theme/theme_bloc.dart';
 import 'package:iamhere/features/profile/presentation/bloc/sign_up/sign_up_bloc.dart';
 import 'package:iamhere/app/db/database.dart';
 import 'package:iamhere/core/constants/host.dart';
+import 'package:iamhere/features/user/presentation/bloc/user_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -40,6 +41,9 @@ Future<void> initDI() async {
   sl.registerFactory(() => SignInBloc(
     userRepository: sl<UserRepository>(),
     profileBloc: sl<ProfileBloc>(),
+  ));
+  sl.registerFactory(() => UserBloc(
+    userRepository: sl<UserRepository>(),
   ));
 
   sl.registerLazySingleton<PlacesRepository>(() => PlacesRepository(

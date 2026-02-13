@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
-import 'package:iamhere/features/profile/data/repositories/user_repository.dart';
+import 'package:iamhere/shared/data/user/repositories/user_repository.dart';
 import 'package:meta/meta.dart';
 
 part 'sign_up_event.dart';

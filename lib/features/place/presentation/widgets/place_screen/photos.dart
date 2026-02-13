@@ -2,14 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:iamhere/features/place/domain/entities/photo.dart';
-import 'package:iamhere/core/constants/host.dart';
+import 'package:iamhere/shared/utils/photo.dart';
 import 'section_widget.dart';
-
-// TODO вынести в файл utils.dart
-String _photoUrl(String path) {
-  final p = path.startsWith('/') ? path.substring(1) : path;
-  return 'http://$host/$p';
-}
 
 class PlacePhotos extends StatelessWidget {
   final List<PhotoModel> photos;
@@ -19,7 +13,7 @@ class PlacePhotos extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final urls = photos.map((p) => _photoUrl(p.path)).toList();
+    final urls = photos.map((p) => photoUrl(p.path)).toList();
 
     return SliverToBoxAdapter(
       child: photos.isNotEmpty
@@ -46,7 +40,7 @@ class PlacePhotos extends StatelessWidget {
                       );
                     },
                     child: Image.network(
-                      _photoUrl(photos[index].path),
+                      photoUrl(photos[index].path),
                       fit: BoxFit.cover,
                       errorBuilder: (_, __, ___) => const Icon(Icons.broken_image),
                     ),

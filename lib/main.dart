@@ -10,12 +10,14 @@ import 'package:iamhere/shared/bloc/locale/locale_event.dart';
 import 'package:iamhere/shared/bloc/locale/locale_state.dart';
 import 'package:iamhere/features/profile/presentation/bloc/profile/profile_bloc.dart';
 import 'package:iamhere/features/profile/presentation/bloc/sign_in/sign_in_bloc.dart';
+import 'package:iamhere/features/user/presentation/bloc/user_bloc.dart';
 import 'package:iamhere/shared/bloc/theme/theme_bloc.dart';
 import 'package:iamhere/app/theme/app_theme.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
@@ -30,6 +32,8 @@ void main() async {
   FirebaseMessaging.onBackgroundMessage(
     _firebaseMessagingBackgroundHandler,
   );
+
+
 
   // Для разработки: раскомментируйте следующую строку, чтобы удалить БД при запуске
   // await AppDatabase.deleteDatabase();
@@ -59,6 +63,9 @@ void main() async {
         ),
         BlocProvider<SignInBloc>.value(
           value: sl<SignInBloc>()..add(SignInCheckTokenEvent()),
+        ),
+        BlocProvider<UserBloc>.value(
+          value: sl<UserBloc>(),
         ),
       ],
       child: const MainApp(),

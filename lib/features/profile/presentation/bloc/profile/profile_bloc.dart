@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
-import 'package:iamhere/features/profile/data/repositories/user_repository.dart';
+import 'package:iamhere/shared/data/user/repositories/user_repository.dart';
 
 part 'profile_event.dart';
 part 'profile_state.dart';
@@ -17,6 +17,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   }
 
   Future<void> _onProfileLoadEvent(ProfileLoadEvent event, Emitter<ProfileState> emit) async {
+    debugPrint('🤍⚡️ ProfileBloc _onProfileLoadEvent');
     // Сохраняем текущее состояние isAuth перед загрузкой
     final currentIsAuth = state is ProfileLoaded ? (state as ProfileLoaded).isAuth : false;
     emit(ProfileLoading());

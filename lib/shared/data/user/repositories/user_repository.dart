@@ -106,6 +106,21 @@ class UserRepository {
     }
   }
 
+  RequestOperation<Map<String, dynamic>> getUserInfoById({
+    required int userId,
+  }) async {
+    try {
+      final token = await userLocalDataSource.getUserToken();
+      if (token == null) {
+        return Result.error(Failure(description: 'No token found'));
+      }
+      final response = await userRemoteDataSource.getUserInfoById(token, userId);
+      return Result.ok(response);
+    } catch (e) {
+      return Result.error(Failure(description: 'Failed to get user info by id: $e'));
+    }
+  }
+
   // @override
   // Future<Either<Failure, bool>> isAuthenticated() async {
   //   try {

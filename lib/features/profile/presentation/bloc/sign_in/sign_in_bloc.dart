@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
-import 'package:iamhere/features/profile/data/repositories/user_repository.dart';
+import 'package:iamhere/shared/data/user/repositories/user_repository.dart';
 import 'package:iamhere/features/profile/presentation/bloc/profile/profile_bloc.dart';
 import 'package:meta/meta.dart';
 
@@ -49,6 +49,7 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
         );
         if (savedToken.isSuccess) {
           profileBloc.add(ProfileSetIsAuthEvent(isAuth: true));
+          profileBloc.add(ProfileLoadEvent());
           emit(SignInSuccess(userData: result.data!));
         } else {
           debugPrint('❌❌❌ SignInBloc: savedToken: ${savedToken.error?.description}');
@@ -74,6 +75,7 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
       if (savedToken != null && savedToken.isNotEmpty) {
         // Если токен найден, устанавливаем авторизацию
         profileBloc.add(ProfileSetIsAuthEvent(isAuth: true));
+        profileBloc.add(ProfileLoadEvent());
         debugPrint('✅ SignInBloc: токен найден, пользователь авторизован');
       } else {
         debugPrint('ℹ️ SignInBloc: токен не найден, пользователь не авторизован');

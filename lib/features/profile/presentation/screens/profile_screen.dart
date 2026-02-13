@@ -16,9 +16,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    // Загружаем данные профиля только если login отсутствует
+    // Загружаем данные профиля только если состояние не загружено
     final currentState = context.read<ProfileBloc>().state;
-    if (currentState is! ProfileLoaded || currentState.login == null) {
+    if (currentState is! ProfileLoaded) {
       context.read<ProfileBloc>().add(ProfileLoadEvent());
     }
   }

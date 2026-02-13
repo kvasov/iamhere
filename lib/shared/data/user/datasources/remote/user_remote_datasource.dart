@@ -9,6 +9,7 @@ abstract class UserRemoteDataSource {
   Future<Map<String, dynamic>> signUp(String name, String login, String email, String password);
   Future<Map<String, dynamic>> getUserInfo(String token);
   Future<Map<String, dynamic>> updateUserInfo(String token, String userId, String name, String password, String passwordConfirm, {String? photoPath});
+  Future<Map<String, dynamic>> getUserInfoById(String token, int userId);
 }
 
 class UserRemoteDataSourceImpl implements UserRemoteDataSource {
@@ -123,6 +124,26 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
       throw Exception(e.response?.data['error'] ?? 'Network error');
     } catch (e) {
       throw Exception('Failed to update user info: $e');
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> getUserInfoById(String token, int userId) async {
+    try {
+      final Dio dio = _dio;
+      final response = await dio.get(
+        '/api/users/$userId',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+      return response.data;
+    } on DioException catch (e) {
+      throw Exception(e.response?.data['error'] ?? 'Network error');
+    } catch (e) {
+      throw Exception('Failed to get user info by id: $e');
     }
   }
 }

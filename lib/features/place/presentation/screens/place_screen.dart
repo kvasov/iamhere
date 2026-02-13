@@ -174,7 +174,9 @@ class _PlaceViewState extends State<PlaceView> {
                 PlacePhotos(photos: state.place.photos ?? [], photosKey: _photosKey),
 
                 PlaceReviews(reviews: state.place.reviews ?? [], reviewsKey: _reviewsKey),
-
+                SliverToBoxAdapter(
+                  child: SizedBox(height: 100),
+                ),
                 // SliverFillRemaining(
                 //   hasScrollBody: true,
                 //   child: Container(

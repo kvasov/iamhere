@@ -7,6 +7,7 @@ import 'package:iamhere/features/place/presentation/screens/place_screen.dart';
 import 'package:iamhere/features/place/presentation/screens/gallery_screen.dart';
 import 'package:iamhere/features/profile/presentation/screens/sign_in_screen.dart';
 import 'package:iamhere/features/profile/presentation/screens/sign_up_screen.dart';
+import 'package:iamhere/features/user/presentation/screens/user_screen.dart';
 import 'package:iamhere/features/splash/presentation/screens/splash_screen.dart';
 import 'package:iamhere/features/profile/presentation/screens/profile_screen.dart';
 import 'package:iamhere/features/extra/presentation/screens/extra_screen.dart';
@@ -265,6 +266,12 @@ class AppRouter {
         path: '/sign-up',
         name: 'sign-up',
         child: SignUpScreen(),
+      ),
+      buildRoute(
+        path: '/user/:userId',
+        name: 'user',
+        child: const UserScreen(),
+        showBottomNavBar: true,
       ),
       buildRoute(
         path: '/extra',

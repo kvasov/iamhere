@@ -7,6 +7,7 @@ import 'package:iamhere/features/place/presentation/widgets/places_list_screen.d
 import 'package:iamhere/core/di/injection_container.dart' as di;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iamhere/features/profile/presentation/bloc/profile/profile_bloc.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,6 +20,15 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+  }
+
+  final analytics = FirebaseAnalytics.instance;
+
+  Future<void> showPromoTrigger() async {
+    print('🔔 showPromoTrigger');
+    await analytics.logEvent(
+      name: 'app_launch',
+    );
   }
 
   @override
@@ -70,6 +80,16 @@ class HomeView extends StatelessWidget {
                 context.push('/extra');
               }
             ),
+            GFButton(
+              text: 'Show Promo',
+              icon: const Icon(Icons.local_offer, size: 16, color: Colors.white),
+              onPressed: () {
+                debugPrint('🔔 show promo!!!');
+                FirebaseAnalytics.instance.logEvent(
+                  name: 'promo_trigger',
+                );
+              }
+            ),
             SizedBox(
               height: MediaQuery.of(context).size.height - 100,
               child: PlacesListWidget(),
@@ -92,7 +112,7 @@ class HomeView extends StatelessWidget {
                 }
                 return const Text('State is not loaded');
               },
-            )
+            ),
           ],
         ),
       ),

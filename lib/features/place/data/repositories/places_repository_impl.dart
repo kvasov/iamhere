@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../datasources/places_datasource.dart';
 import 'package:iamhere/core/result.dart';
-import 'package:iamhere/features/profile/data/datasources/local/user_local_datasource.dart';
+import 'package:iamhere/shared/data/user/datasources/local/user_local_datasource.dart';
 import 'package:iamhere/features/place/domain/entities/place.dart';
 
 class PlacesRepository {
