@@ -28,16 +28,14 @@ class PlaceHead extends StatelessWidget {
       builder: (context, constraints) {
         const expandedHeight = 200.0;
         const toolbarHeight = 40.0;
-        const bottomMinHeight = 40.0;
-        const bottomMaxHeight = 40.0;
-        final collapsedHeight = toolbarHeight + bottomMinHeight;
+        const bottomHeight = 40.0;
+        final collapsedHeight = toolbarHeight + bottomHeight;
 
         final currentHeight = expandedHeight - constraints.scrollOffset;
         // Вычисляем t на основе scroll offset
         final t = ((currentHeight - collapsedHeight) / (expandedHeight - collapsedHeight)).clamp(0.0, 1.0);
 
         // final bottomHeight = bottomMinHeight + (bottomMaxHeight - bottomMinHeight) * t;
-        final bottomHeight = bottomMinHeight;
 
         final titlePaddingLeft = 64 - 55 * t;
 

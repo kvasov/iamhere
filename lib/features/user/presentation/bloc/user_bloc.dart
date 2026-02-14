@@ -1,8 +1,6 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:iamhere/shared/data/user/repositories/user_repository.dart';
-import 'package:iamhere/features/profile/presentation/bloc/profile/profile_bloc.dart';
-import 'package:meta/meta.dart';
 
 part 'user_event.dart';
 part 'user_state.dart';

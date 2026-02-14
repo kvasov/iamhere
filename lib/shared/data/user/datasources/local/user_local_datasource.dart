@@ -1,6 +1,5 @@
-import 'package:drift/drift.dart';
-import 'package:iamhere/app/db/database.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 abstract class UserLocalDataSource {
   Future<void> saveUserToken(String token);
@@ -10,26 +9,14 @@ abstract class UserLocalDataSource {
 }
 
 class UserLocalDataSourceImpl implements UserLocalDataSource {
-  final AppDatabase _database;
+  final FlutterSecureStorage _secureStorage;
 
-  UserLocalDataSourceImpl(this._database);
+  UserLocalDataSourceImpl(this._secureStorage);
 
   @override
   Future<void> saveUserToken(String token) async {
     try {
-      // Проверяем, существует ли запись
-      final existingUser = await _database.select(_database.users).getSingleOrNull();
-
-      if (existingUser != null) {
-        // Обновляем существующую запись
-        await (_database.update(_database.users)..where((tbl) => tbl.id.equals(existingUser.id)))
-            .write(UsersCompanion(token: Value(token)));
-      } else {
-        // Вставляем новую запись, если её нет
-        await _database
-            .into(_database.users)
-            .insert(UsersCompanion.insert(token: Value(token)));
-      }
+      await _secureStorage.write(key: 'user_token', value: token);
     } catch (e) {
       throw Exception('Failed to save user token: $e');
     }
@@ -38,8 +25,8 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
   @override
   Future<String?> getUserToken() async {
     try {
-      final user = await _database.select(_database.users).getSingleOrNull();
-      return user?.token;
+      final token = await _secureStorage.read(key: 'user_token');
+      return token;
     } catch (e) {
       debugPrint('UserLocalDataSourceImpl: getUserToken error: $e');
       return null;
@@ -49,7 +36,7 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
   @override
   Future<void> removeUserToken() async {
     try {
-      await _database.delete(_database.users).go();
+      await _secureStorage.delete(key: 'user_token');
       debugPrint('💚 UserLocalDataSourceImpl: removeUserToken success');
     } catch (e) {
       debugPrint('❌ UserLocalDataSourceImpl: removeUserToken error: $e');

@@ -6,8 +6,6 @@ import 'package:iamhere/app/i18n/strings.g.dart';
 import 'package:iamhere/app/router/app_router.dart';
 import 'package:iamhere/core/di/injection_container.dart';
 import 'package:iamhere/shared/bloc/locale/locale_bloc.dart';
-import 'package:iamhere/shared/bloc/locale/locale_event.dart';
-import 'package:iamhere/shared/bloc/locale/locale_state.dart';
 import 'package:iamhere/features/profile/presentation/bloc/profile/profile_bloc.dart';
 import 'package:iamhere/features/profile/presentation/bloc/sign_in/sign_in_bloc.dart';
 import 'package:iamhere/features/user/presentation/bloc/user_bloc.dart';
@@ -17,11 +15,11 @@ import 'package:go_router/go_router.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
+// import 'package:firebase_analytics/firebase_analytics.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
-  print('🔔 Background message: ${message.messageId}');
+  debugPrint('🔔 Background message: ${message.messageId}');
 }
 
 void main() async {
@@ -53,7 +51,7 @@ void main() async {
     MultiBlocProvider(
       providers: [
         BlocProvider<LocaleBloc>(
-          create: (_) => sl<LocaleBloc>()..add(LocaleInitEvent('ru')),
+          create: (_) => sl<LocaleBloc>()..add(LocaleInitEvent()),
         ),
         BlocProvider<ProfileBloc>.value(
           value: sl<ProfileBloc>(),

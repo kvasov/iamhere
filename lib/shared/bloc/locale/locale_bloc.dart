@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:iamhere/features/settings/data/repositories/settings_repository_impl.dart';
+import 'package:iamhere/core/di/injection_container.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iamhere/app/i18n/strings.g.dart';
-import 'package:iamhere/shared/bloc/locale/locale_state.dart';
-import 'package:iamhere/shared/bloc/locale/locale_event.dart';
+
+part 'locale_event.dart';
+part 'locale_state.dart';
 
 /// BLoC для управления локалью приложения
 class LocaleBloc extends Bloc<LocaleEvent, LocaleState> {
+
   LocaleBloc() : super(LocaleState(const Locale('ru'))) {
     on<LocaleInitEvent>(_onInit);
     on<LocaleToggleEvent>(_onToggle);
@@ -14,7 +18,9 @@ class LocaleBloc extends Bloc<LocaleEvent, LocaleState> {
 
   /// Инициализация локали из настроек
   Future<void> _onInit(LocaleInitEvent event, Emitter<LocaleState> emit) async {
-    final languageCode = event.languageCode ?? 'ru';
+    final settingsRepository = sl<SettingsRepository>();
+    final result = await settingsRepository.getLanguageCode();
+    final languageCode = result.data ?? 'ru';
     final locale = Locale(languageCode);
     final appLocale = languageCode == 'ru' ? AppLocale.ru : AppLocale.en;
 
@@ -37,6 +43,8 @@ class LocaleBloc extends Bloc<LocaleEvent, LocaleState> {
     final appLocale = event.locale.languageCode == 'ru' ? AppLocale.ru : AppLocale.en;
 
     await LocaleSettings.setLocale(appLocale);
+    final settingsRepository = sl<SettingsRepository>();
+    await settingsRepository.saveLanguageCode(event.locale.languageCode);
     emit(LocaleState(event.locale));
   }
 }

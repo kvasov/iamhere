@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+part of 'locale_bloc.dart';
 
 /// Состояние LocaleBloc
 class LocaleState {

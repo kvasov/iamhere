@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+part of 'locale_bloc.dart';
 
 /// События для LocaleBloc
 abstract class LocaleEvent {}
@@ -15,7 +15,6 @@ class LocaleSetEvent extends LocaleEvent {
 
 /// Событие для инициализации локали из настроек
 class LocaleInitEvent extends LocaleEvent {
-  final String? languageCode;
 
-  LocaleInitEvent(this.languageCode);
+  LocaleInitEvent();
 }

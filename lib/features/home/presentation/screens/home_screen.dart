@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:iamhere/app/i18n/strings.g.dart';
 import 'package:go_router/go_router.dart';
@@ -104,6 +105,36 @@ class HomeView extends StatelessWidget {
                 },
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisAlignment: .center,
+                children: [
+                  GFButton(
+                    text: "Get all secure",
+                    icon: const Icon(Icons.settings, size: 16, color: Colors.white),
+                    onPressed: () {
+                      final secureStorage = di.sl<FlutterSecureStorage>();
+                      secureStorage.readAll().then((value) {
+                        print('🔔 all secure storage: $value');
+                      });
+                    },
+                  ),
+                  SizedBox(width: 16),
+                  GFButton(
+                    text: "Delete all secure",
+                    icon: const Icon(Icons.settings, size: 16, color: Colors.white),
+                    onPressed: () {
+                      final secureStorage = di.sl<FlutterSecureStorage>();
+                      secureStorage.deleteAll().then((_) {
+                        print('🔔 all secure storage deleted');
+                      });
+                    },
+                  ),
+                ],
+              ),
+            ),
+
             Image.asset('assets/images/1.jpg', fit: BoxFit.cover),
             BlocBuilder<ProfileBloc, ProfileState>(
               builder: (context, state) {

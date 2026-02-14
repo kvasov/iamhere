@@ -1,8 +1,7 @@
-import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:iamhere/features/settings/data/repositories/todo_repository_impl.dart';
-import 'package:iamhere/features/settings/data/datasources/datasource_local.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:iamhere/features/settings/data/repositories/settings_repository_impl.dart';
+import 'package:iamhere/core/di/injection_container.dart';
 
 part 'theme_event.dart';
 part 'theme_state.dart';
@@ -17,17 +16,16 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
 
   /// Инициализация темы
   Future<void> _onInit(ThemeInitEvent event, Emitter<ThemeState> emit) async {
-    // Загружаем тему из БД
-    final settingsLocalDataSource = SettingsLocalDataSourceImpl();
-    final themeMode = await settingsLocalDataSource.getThemeMode();
-    emit(ThemeLoaded(themeMode: themeMode));
+    // Загружаем тему из Secure Storage
+    final settingsRepository = sl<SettingsRepository>();
+    final result = await settingsRepository.getThemeMode();
+
+    emit(ThemeLoaded(themeMode: result.data ?? ThemeMode.system));
   }
 
   /// Установка конкретного режима темы
   Future<void> _onSet(ThemeSetEvent event, Emitter<ThemeState> emit) async {
-    final settingsRepository = SettingsRepository(
-      settingsLocalDataSource: SettingsLocalDataSourceImpl(),
-    );
+    final settingsRepository = sl<SettingsRepository>();
 
     final result = await settingsRepository.saveThemeMode(event.themeMode);
 
