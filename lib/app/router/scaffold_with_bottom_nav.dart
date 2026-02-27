@@ -29,17 +29,14 @@ class ScaffoldWithBottomAppBar extends StatelessWidget {
   }
 
   void _onItemTapped(BuildContext context, int index) {
-    switch (index) {
-      case 0:
-        context.go('/home');
-        break;
-      case 1:
-        context.go('/profile');
-        break;
-      case 2:
-        context.go('/settings');
-        break;
-    }
+    final targetPath = switch (index) {
+      0 => '/home',
+      1 => '/profile',
+      2 => '/settings',
+      _ => '/home',
+    };
+    if (currentLocation == targetPath) return;
+    context.push(targetPath);
   }
 
   Widget _buildBottomAppBar(BuildContext context) {
@@ -138,7 +135,10 @@ class ScaffoldWithBottomAppBar extends StatelessWidget {
         resizeToAvoidBottomInset: scaffold.resizeToAvoidBottomInset,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            context.go('/add-place');
+            debugPrint('🔔 show add place!!!');
+          },
           shape: CircleBorder(),
           elevation: 0,
           backgroundColor: Color.fromRGBO(152, 182, 237, 1),

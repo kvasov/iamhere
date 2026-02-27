@@ -1,15 +1,19 @@
+import 'package:flutter/foundation.dart';
 
 import '../datasources/local/user_local_datasource.dart';
 import '../datasources/remote/user_remote_datasource.dart';
+import 'package:iamhere/shared/data/fcm/fcm_local_datasource.dart';
 import 'package:iamhere/core/result.dart';
 
 class UserRepository {
   final UserRemoteDataSource userRemoteDataSource;
   final UserLocalDataSource userLocalDataSource;
+  final FcmLocalDataSource fcmLocalDataSource;
 
   UserRepository({
     required this.userRemoteDataSource,
     required this.userLocalDataSource,
+    required this.fcmLocalDataSource,
   });
 
   RequestOperation<Map<String, dynamic>> signIn({
@@ -33,13 +37,14 @@ class UserRepository {
     required String login,
     required String email,
     required String password,
+    required String photoPath,
   }) async {
     // final isConnected = await networkInfo.isConnected;
     // if (!isConnected) {
     //   return Result.error(Failure(description: 'No internet connection'));
     // }
     try {
-      final response = await userRemoteDataSource.signUp(name, login, email, password);
+      final response = await userRemoteDataSource.signUp(name, login, email, password, photoPath);
       return Result.ok(response);
     } catch (e) {
       return Result.error(Failure(description: 'Failed to sign up: $e'));
@@ -59,7 +64,12 @@ class UserRepository {
 
   RequestOperation<bool> signOut() async {
     try {
-      await userLocalDataSource.removeUserToken();
+      final token = await userLocalDataSource.getUserToken();
+      await userLocalDataSource.deleteUserToken();
+      if (token == null) {
+        return Result.error(Failure(description: 'No token found'));
+      }
+      await userRemoteDataSource.signOut(token);
       return Result.ok(true);
     } catch (e) {
       return Result.error(Failure(description: 'Failed to sign out: $e'));
@@ -81,9 +91,24 @@ class UserRepository {
         return null;
       }
       final response = await userRemoteDataSource.getUserInfo(token);
+      // debugPrint('🤍‼️ UserRepository getUserInfo - response: $response');
       return response;
     } catch (e) {
-      return null;
+
+      return {"error": e.toString()};
+    }
+  }
+
+  Future<void> deleteToken() async {
+    try {
+      final token = await userLocalDataSource.getUserToken();
+      await userLocalDataSource.deleteUserToken();
+      if (token == null) {
+        throw Exception('No token found');
+      }
+      await userRemoteDataSource.signOut(token);
+    } catch (e) {
+      throw Exception('Failed to delete token: $e');
     }
   }
 
@@ -118,6 +143,69 @@ class UserRepository {
       return Result.ok(response);
     } catch (e) {
       return Result.error(Failure(description: 'Failed to get user info by id: $e'));
+    }
+  }
+
+  RequestOperation<Map<String, dynamic>> subscribeToUser({
+    required int userId,
+  }) async {
+    final token = await userLocalDataSource.getUserToken();
+    if (token == null) {
+      return Result.error(Failure(description: 'No token found'));
+    }
+    try {
+      final response = await userRemoteDataSource.subscribeToUser(token, userId);
+      return Result.ok(response);
+    } catch (e) {
+      return Result.error(Failure(description: e.toString()));
+    }
+  }
+
+  RequestOperation<Map<String, dynamic>> unSubscribeFromUser({
+    required int userId,
+  }) async {
+    debugPrint('🤍‼️ UserRepository unSubscribeFromUser - userId: $userId');
+    final token = await userLocalDataSource.getUserToken();
+    if (token == null) {
+      return Result.error(Failure(description: 'No token found'));
+    }
+    try {
+      final response = await userRemoteDataSource.unSubscribeFromUser(token, userId);
+      return Result.ok(response);
+    } catch (e) {
+      return Result.error(Failure(description: e.toString()));
+    }
+  }
+
+  RequestOperation<Map<String, dynamic>> checkSubscription({
+    required int followedId,
+  }) async {
+    final token = await userLocalDataSource.getUserToken();
+    if (token == null) {
+      return Result.error(Failure(description: 'No token found'));
+    }
+    try {
+      final response = await userRemoteDataSource.checkSubscription(token, followedId);
+      return Result.ok(response);
+    } catch (e) {
+      return Result.error(Failure(description: e.toString()));
+    }
+  }
+
+  RequestOperation<Map<String, dynamic>> updateUserFcmToken() async {
+    final fcmToken = await fcmLocalDataSource.getFcmToken();
+    if (fcmToken == null) {
+      return Result.error(Failure(description: 'No fcm token found'));
+    }
+    final token = await userLocalDataSource.getUserToken();
+    if (token == null) {
+      return Result.error(Failure(description: 'No token found'));
+    }
+    try {
+      final response = await userRemoteDataSource.updateUserFcmToken(token, fcmToken);
+        return Result.ok(response);
+    } catch (e) {
+      return Result.error(Failure(description: 'Failed to update user fcm token: $e'));
     }
   }
 

@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iamhere/core/di/injection_container.dart';
+import 'package:iamhere/features/profile/presentation/bloc/profile/profile_bloc.dart';
 import 'package:iamhere/features/profile/presentation/bloc/sign_in/sign_in_bloc.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iamhere/features/profile/presentation/widgets/profile/text_field_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignInScreen extends StatefulWidget {
-  const SignInScreen({super.key});
+  const SignInScreen({super.key, this.showTokenExpiredMessage = false});
+
+  /// Показывать «Вас давно не было…» при редиректе из-за истёкшего токена (reason=token_expired в роуте).
+  final bool showTokenExpiredMessage;
 
   @override
   State<SignInScreen> createState() => _SignInScreenState();
@@ -17,6 +22,14 @@ class _SignInScreenState extends State<SignInScreen> {
   final TextEditingController loginController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.showTokenExpiredMessage) {
+      context.read<ProfileBloc>().add(ProfileTokenDeleteEvent());
+    }
+  }
 
   @override
   void dispose() {
@@ -84,6 +97,12 @@ class _SignInScreenState extends State<SignInScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    if (widget.showTokenExpiredMessage) ...[
+                      const Text(
+                        'Вас давно не было, нужно ввести данные для входа',
+                      ),
+                      const SizedBox(height: 16),
+                    ],
                     TextFieldWidget(
                       hintText: 'Name',
                       prefixIcon: Icons.person,

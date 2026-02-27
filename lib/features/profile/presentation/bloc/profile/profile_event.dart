@@ -13,6 +13,8 @@ class ProfileSetIsAuthEvent extends ProfileEvent {
 
 class ProfileSignOutEvent extends ProfileEvent {}
 
+class ProfileTokenDeleteEvent extends ProfileEvent {}
+
 class ProfileUpdateEvent extends ProfileEvent {
   final String name;
   final String password;

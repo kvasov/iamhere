@@ -1,7 +1,8 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart';
-import 'package:meta/meta.dart';
+import 'package:iamhere/core/di/injection_container.dart';
 import 'package:iamhere/shared/data/user/repositories/user_repository.dart';
+import 'package:iamhere/shared/data/fcm/fcm_local_datasource.dart';
 
 part 'profile_event.dart';
 part 'profile_state.dart';
@@ -14,28 +15,46 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     on<ProfileSetIsAuthEvent>(_onProfileSetIsAuthEvent);
     on<ProfileSignOutEvent>(_onProfileSignOutEvent);
     on<ProfileUpdateEvent>(_onProfileUpdateEvent);
+    on<ProfileTokenDeleteEvent>(_onProfileTokenDeleteEvent);
   }
 
   Future<void> _onProfileLoadEvent(ProfileLoadEvent event, Emitter<ProfileState> emit) async {
     debugPrint('🤍⚡️ ProfileBloc _onProfileLoadEvent');
     // Сохраняем текущее состояние isAuth перед загрузкой
-    final currentIsAuth = state is ProfileLoaded ? (state as ProfileLoaded).isAuth : false;
     emit(ProfileLoading());
 
     try {
       final userInfo = await userRepository.getUserInfo();
-      debugPrint('🤍 ProfileBloc _onProfileLoadEvent - userInfo: $userInfo');
-      emit(ProfileLoaded(
-        isAuth: userInfo != null ? true : currentIsAuth,
-        userId: userInfo?['id'].toString(),
-        login: userInfo?['login'],
-        name: userInfo?['name'],
-        email: userInfo?['email'],
-        photoPath: userInfo?['photo'],
-      ));
+
+      if (userInfo?['error'] != null) {
+        debugPrint('‼️‼️‼️ ProfileBloc _onProfileLoadEvent error: ${userInfo?['error']}');
+        // Эмитим ProfileTokenExpired только если пользователь ещё не был помечен как авторизованный
+        // (иначе после успешного входа старый/задержанный ответ API мог бы перезаписать состояние)
+        final errorStr = userInfo!['error'].toString();
+        final isTokenExpiredError = errorStr.contains('Token is expired');
+        if (isTokenExpiredError) {
+          emit(ProfileTokenExpired());
+        }
+        return;
+      } else {
+        try {
+          debugPrint('💚💚💚 ProfileBloc _onProfileLoadEvent updateUserFcmToken');
+          await userRepository.updateUserFcmToken();
+          emit(ProfileLoaded(
+            isAuth: true,
+            userId: userInfo?['id'].toString(),
+            login: userInfo?['login'],
+            name: userInfo?['name'],
+            email: userInfo?['email'],
+            photoPath: userInfo?['photo'],
+          ));
+        } catch (e) {
+          debugPrint('ProfileBloc _onProfileLoadEvent error: $e');
+        }
+
+      }
     } catch (e) {
-      // В случае ошибки сохраняем предыдущее состояние авторизации
-      emit(ProfileLoaded(isAuth: currentIsAuth));
+      emit(ProfileLoaded(isAuth: false));
     }
   }
 
@@ -46,8 +65,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   Future<void> _onProfileSignOutEvent(ProfileSignOutEvent event, Emitter<ProfileState> emit) async {
     final result = await userRepository.signOut();
     if (result.isSuccess) {
+      debugPrint('💚 ProfileBloc _onProfileSignOutEvent success');
       emit(ProfileLoaded(isAuth: false));
     } else {
+      debugPrint('❌ ProfileBloc _onProfileSignOutEvent error: ${result.error?.description}');
       emit(ProfileLoaded(isAuth: true));
     }
   }
@@ -78,5 +99,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         status: ProfileStatus.error,
       ) ?? ProfileLoading());
     }
+  }
+
+  Future<void> _onProfileTokenDeleteEvent(ProfileTokenDeleteEvent event, Emitter<ProfileState> emit) async {
+    await userRepository.deleteToken();
   }
 }

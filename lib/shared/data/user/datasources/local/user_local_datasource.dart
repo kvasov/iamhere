@@ -4,7 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 abstract class UserLocalDataSource {
   Future<void> saveUserToken(String token);
   Future<String?> getUserToken();
-  Future<void> removeUserToken();
+  Future<void> deleteUserToken();
   // Future<bool> hasToken();
 }
 
@@ -34,13 +34,13 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
   }
 
   @override
-  Future<void> removeUserToken() async {
+  Future<void> deleteUserToken() async {
     try {
       await _secureStorage.delete(key: 'user_token');
-      debugPrint('💚 UserLocalDataSourceImpl: removeUserToken success');
+      debugPrint('💚 UserLocalDataSourceImpl: deleteUserToken success');
     } catch (e) {
-      debugPrint('❌ UserLocalDataSourceImpl: removeUserToken error: $e');
-      throw Exception('Failed to remove token: $e');
+      debugPrint('❌ UserLocalDataSourceImpl: deleteUserToken error: $e');
+      throw Exception('Failed to delete token: $e');
     }
   }
 

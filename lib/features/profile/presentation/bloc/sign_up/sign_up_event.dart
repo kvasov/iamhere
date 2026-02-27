@@ -10,6 +10,7 @@ final class SignUpSubmitted extends SignUpEvent {
   final String email;
   final String password;
   final String passwordConfirm;
+  final String? photoPath;
 
   SignUpSubmitted({
     required this.name,
@@ -17,5 +18,6 @@ final class SignUpSubmitted extends SignUpEvent {
     required this.email,
     required this.password,
     required this.passwordConfirm,
+    this.photoPath,
   });
 }

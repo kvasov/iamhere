@@ -73,10 +73,11 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
       final savedToken = await userRepository.getUserToken();
 
       if (savedToken != null && savedToken.isNotEmpty) {
-        // Если токен найден, устанавливаем авторизацию
-        profileBloc.add(ProfileSetIsAuthEvent(isAuth: true));
+        // Если токен найден, загружаем данные пользователя
+        // если срок действия токена истек, то ....
+        // profileBloc.add(ProfileSetIsAuthEvent(isAuth: true));
         profileBloc.add(ProfileLoadEvent());
-        debugPrint('✅ SignInBloc: токен найден, пользователь авторизован');
+        // debugPrint('✅✅✅ SignInBloc: токен найден, пользователь авторизован');
       } else {
         debugPrint('ℹ️ SignInBloc: токен не найден, пользователь не авторизован');
       }

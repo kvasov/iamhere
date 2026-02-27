@@ -6,18 +6,22 @@ import 'package:iamhere/app/i18n/strings.g.dart';
 import 'package:iamhere/app/router/app_router.dart';
 import 'package:iamhere/core/di/injection_container.dart';
 import 'package:iamhere/shared/bloc/locale/locale_bloc.dart';
+import 'package:iamhere/shared/data/fcm/fcm_local_datasource.dart';
 import 'package:iamhere/features/profile/presentation/bloc/profile/profile_bloc.dart';
 import 'package:iamhere/features/profile/presentation/bloc/sign_in/sign_in_bloc.dart';
-import 'package:iamhere/features/user/presentation/bloc/user_bloc.dart';
+import 'package:iamhere/features/user/presentation/bloc/user_bloc/user_bloc.dart';
+import 'package:iamhere/features/user/presentation/bloc/subscription_bloc/subscription_bloc.dart';
 import 'package:iamhere/shared/bloc/theme/theme_bloc.dart';
 import 'package:iamhere/app/theme/app_theme.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 // import 'package:firebase_analytics/firebase_analytics.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   debugPrint('🔔 Background message: ${message.messageId}');
 }
@@ -37,6 +41,9 @@ void main() async {
   // await AppDatabase.deleteDatabase();
 
   await initDI();
+
+  final prefs = sl<SharedPreferences>();
+  final splashHasBeenShown = prefs.getBool('splash_has_been_shown') ?? false;
 
   // Создаем ThemeBloc и загружаем тему через событие
   final themeBloc = sl<ThemeBloc>();
@@ -66,13 +73,14 @@ void main() async {
           value: sl<UserBloc>(),
         ),
       ],
-      child: const MainApp(),
+      child: MainApp(splashHasBeenShown: splashHasBeenShown),
     ),
   );
 }
 
 class MainApp extends StatefulWidget {
-  const MainApp({super.key});
+  const MainApp({super.key, required this.splashHasBeenShown});
+  final bool splashHasBeenShown;
 
   @override
   State<MainApp> createState() => _MainAppState();
@@ -85,11 +93,11 @@ class _MainAppState extends State<MainApp> {
   void initState() {
     super.initState();
 
-    /// ✅ Теперь ProfileBloc УЖЕ существует выше в дереве
     final profileBloc = context.read<ProfileBloc>();
 
     _router = AppRouter(
       profileBloc: profileBloc,
+      splashHasBeenShown: widget.splashHasBeenShown,
     ).router;
 
     if (Platform.isAndroid) {
@@ -103,6 +111,8 @@ class _MainAppState extends State<MainApp> {
     await messaging.requestPermission();
 
     final token = await messaging.getToken();
+    final fcmLocalDataSource = sl<FcmLocalDataSource>();
+    await fcmLocalDataSource.saveFcmToken(token!);
     print('📱 FCM Token: $token');
 
     FirebaseMessaging.onMessage.listen((message) {

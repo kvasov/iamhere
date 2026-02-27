@@ -56,6 +56,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
         login: event.login,
         email: event.email,
         password: event.password,
+        photoPath: event.photoPath ?? '',
       );
 
       if (result.isSuccess) {

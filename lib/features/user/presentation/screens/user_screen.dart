@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:iamhere/features/place/presentation/bloc/places_bloc.dart';
 import 'package:iamhere/features/profile/presentation/bloc/profile/profile_bloc.dart';
-import 'package:iamhere/features/user/presentation/bloc/user_bloc.dart';
+import 'package:iamhere/features/user/presentation/bloc/user_bloc/user_bloc.dart';
 import 'package:iamhere/core/di/injection_container.dart' as di;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iamhere/features/user/presentation/widgets/user_info.dart';
+import 'package:iamhere/features/user/presentation/bloc/subscription_bloc/subscription_bloc.dart';
 
 class UserScreen extends StatefulWidget {
   const UserScreen({super.key});
@@ -29,10 +29,7 @@ class _UserScreenState extends State<UserScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<PlacesBloc>(
-      create: (_) => di.sl<PlacesBloc>(),
-      child: const UserView(),
-    );
+    return const UserView();
   }
 }
 
@@ -48,7 +45,12 @@ class UserView extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 0,
         forceMaterialTransparency: true,
-        leading: Icon(Icons.menu),
+        leading: IconButton(
+          onPressed: () {
+            context.pop();
+          },
+          icon: Icon(Icons.arrow_back),
+        ),
         actions: [
           Icon(Icons.search),
           Icon(Icons.person),
@@ -75,14 +77,19 @@ class UserView extends StatelessWidget {
             if (state is UserLoading) {
               return const Center(child: CircularProgressIndicator());
             }
+
             if (state is UserSuccess) {
               return Column(
                 children: [
-                  UserInfo(
-                    id: state.userData['id'].toString(),
-                    name: state.userData['name'] ?? '',
-                    photoPath: state.userData['photoPath'] ?? '',
-                    profileId: profileLoaded?.userId ?? '',
+                  BlocProvider<SubscriptionBloc>(
+                    create: (_) => di.sl<SubscriptionBloc>()
+                      ..add(SubscriptionCheckEvent(followedId: state.userData['id'])),
+                    child: UserInfo(
+                      userId: state.userData['id'],
+                      name: state.userData['name'] ?? '',
+                      photoPath: state.userData['photoPath'] ?? '',
+                      profileId: profileLoaded?.userId ?? '',
+                    ),
                   ),
                 ],
               );

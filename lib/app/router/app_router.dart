@@ -12,6 +12,7 @@ import 'package:iamhere/features/splash/presentation/screens/splash_screen.dart'
 import 'package:iamhere/features/profile/presentation/screens/profile_screen.dart';
 import 'package:iamhere/features/extra/presentation/screens/extra_screen.dart';
 import 'package:iamhere/features/settings/settings_screen.dart';
+import 'package:iamhere/features/place/presentation/screens/add_place.dart';
 import 'package:iamhere/features/profile/presentation/bloc/profile/profile_bloc.dart';
 import 'package:iamhere/app/router/scaffold_with_bottom_nav.dart';
 
@@ -150,14 +151,14 @@ GoRoute buildRouteWithState({
 /// Конфигурация маршрутов приложения
 class AppRouter {
   final ProfileBloc profileBloc;
-
-  AppRouter({required this.profileBloc});
+  final bool splashHasBeenShown;
+  AppRouter({required this.profileBloc, this.splashHasBeenShown = false});
 
   GoRouter get router => GoRouter(
     initialLocation: '/splash',
     refreshListenable: GoRouterRefreshStream(profileBloc.stream),
     redirect: (context, state) {
-      debugPrint('redirect: ${state.matchedLocation}, profileState: ${profileBloc.state}');
+      debugPrint('🔵🔵🔵🔵🔵🔵 redirect: ${state.matchedLocation}, profileState: ${profileBloc.state}');
       final profileState = profileBloc.state;
 
       final isGoingToSplash = state.matchedLocation == '/splash';
@@ -166,30 +167,45 @@ class AppRouter {
       final isGoingToSignIn = state.matchedLocation == '/sign-in';
       final isGoingToSignUp = state.matchedLocation == '/sign-up';
 
+      // Если токен истек — явно переходим на sign-in в следующем кадре,
+      // т.к. возврат из redirect иногда не применяется (повторный вызов redirect возвращает null).
+      if (profileState is ProfileTokenExpired) {
+        // debugPrint('🔴 redirect: profileState is ProfileTokenExpired');
+        return '/sign-in?reason=token_expired';
+      }
+
       // Если состояние еще не загружено или идет загрузка
       if (profileState is! ProfileLoaded) {
-        debugPrint('🇷🇺 profileState is not loaded: ${profileState.runtimeType}');
+        // debugPrint('🇷🇺 profileState is not loaded: ${profileState.runtimeType}');
         // Если идет загрузка профиля - разрешаем доступ ко всем страницам
         // чтобы не было редиректа во время загрузки данных
         if (profileState is ProfileLoading) {
           return null;
         }
-        // Разрешаем переход на splash и profile (на profile будет загрузка данных)
-        if (isGoingToSplash || isGoingToProfile) {
+
+        // Разрешаем переход на profile (будет загрузка данных)
+        if (isGoingToProfile) {
           return null;
         }
+
+        // Если splash уже был показан, то редиректим на sign-in
+        if (isGoingToSplash && splashHasBeenShown) {
+          return '/sign-in';
+        }
+
         // Если пытаемся перейти на home - редиректим на sign-in
         // (так как после загрузки данных неавторизованный пользователь все равно будет редиректиться на sign-in)
         if (isGoingToHome) {
           return '/sign-in';
         }
         // Разрешаем переход на sign-in
-        if (isGoingToSignIn) {
+        if (isGoingToSignIn || isGoingToSignUp) {
           return null;
         }
         // Редиректим на splash для всех остальных маршрутов
         return '/splash';
       }
+
 
       // Если пользователь не авторизован
       if (profileState.isAuth == false) {
@@ -197,8 +213,14 @@ class AppRouter {
         if (isGoingToProfile || isGoingToHome) {
           return '/sign-in';
         }
-        // Разрешаем доступ только к sign-in и splash
+        // Разрешаем доступ только к sign-in, sign-up и splash
         if (isGoingToSignIn || isGoingToSplash || isGoingToSignUp) {
+          // debugPrint('🔵 redirect: isGoingToSignIn || isGoingToSplash || isGoingToSignUp');
+          // Если splash уже был показан, то редиректим на home
+          if (isGoingToSplash && splashHasBeenShown) {
+            // debugPrint('☎️ redirect: splashHasBeenShown = true, redirecting to home');
+            return '/home';
+          }
           return null;
         }
         // Редиректим на sign-in для всех остальных маршрутов
@@ -208,7 +230,7 @@ class AppRouter {
       // Если пользователь авторизован
       if (profileState.isAuth == true) {
         // Редиректим только со splash на home
-        // Разрешаем доступ к profile и другим страницам
+        // Разрешаем доступ к остальным страницам
         if (isGoingToSplash || isGoingToSignIn) {
           return '/home';
         }
@@ -220,7 +242,7 @@ class AppRouter {
       buildRoute(
         path: '/splash',
         name: 'splash',
-        child: const SplashScreen(),
+        child: SplashScreen(),
       ),
       buildRoute(
         path: '/home',
@@ -256,11 +278,15 @@ class AppRouter {
         child: const SettingsScreen(),
         showBottomNavBar: true,
       ),
-      buildRoute(
+      buildRouteWithState(
         path: '/sign-in',
         name: 'sign-in',
-        child: const SignInScreen(),
-        // showBottomNavBar: true,
+        childBuilder: (state) {
+          final showTokenExpiredMessage =
+              state.uri.queryParameters['reason'] == 'token_expired';
+          // debugPrint('🔥🔥🔥🔥🔥🔥🔥 sign-in: showTokenExpiredMessage=$showTokenExpiredMessage');
+          return SignInScreen(showTokenExpiredMessage: showTokenExpiredMessage);
+        },
       ),
       buildRoute(
         path: '/sign-up',
@@ -277,6 +303,12 @@ class AppRouter {
         path: '/extra',
         name: 'extra',
         child: ExtraScreen(),
+      ),
+      buildRoute(
+        path: '/add-place',
+        name: 'add-place',
+        child: const AddPlaceScreen(),
+        showBottomNavBar: true,
       ),
     ],
   );

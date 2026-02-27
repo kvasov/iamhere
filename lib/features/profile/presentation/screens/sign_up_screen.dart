@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iamhere/core/di/injection_container.dart';
 import 'package:iamhere/features/profile/presentation/bloc/sign_up/sign_up_bloc.dart';
+import 'package:iamhere/features/profile/presentation/widgets/profile/update/avatar_widget.dart';
 import 'package:iamhere/shared/styles/text_input_styles.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:go_router/go_router.dart';
@@ -20,6 +21,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController passwordConfirmController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
+  String? _selectedPhotoPath;
 
   @override
   void dispose() {
@@ -40,9 +43,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
               email: emailController.text.trim(),
               password: passwordController.text,
               passwordConfirm: passwordConfirmController.text,
+              photoPath: _selectedPhotoPath,
             ),
           );
     }
+  }
+
+  void _handlePhotoSelected(String? photoPath) {
+    setState(() {
+      _selectedPhotoPath = photoPath;
+    });
   }
 
   @override
@@ -86,6 +96,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    AvatarWidget(
+                      photoPath: '',
+                      onPhotoSelected: _handlePhotoSelected,
+                      selectedPhotoPath: _selectedPhotoPath,
+                    ),
                     TextFormField(
                       decoration: textInputDecoration(
                         'Name',
