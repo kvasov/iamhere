@@ -24,7 +24,6 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
 
   @override
   Future<Map<String, dynamic>> signIn(String login, String password) async {
-    // debugPrint('UserRemoteDataSourceImpl signIn - вызов dio');
     try {
       final Dio dio = _dio;
       final response = await dio.post(
@@ -34,7 +33,6 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
           'password': password,
         },
       );
-      debugPrint('🤍 UserRemoteDataSourceImpl signIn - получен response: $response');
       return response.data;
     } on DioException catch (e) {
       debugPrint('UserRemoteDataSourceImpl signIn - ошибка: $e');
@@ -100,7 +98,6 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
         '/api/auth/me',
         options: Options(headers: {'Authorization': 'Bearer $token'})
       );
-      debugPrint('💚 UserRemoteDataSourceImpl getUserInfo - получен response: $response');
       return response.data['user'];
     } on DioException catch (e) {
       throw Exception(e.response?.data['error'] ?? 'Network error');

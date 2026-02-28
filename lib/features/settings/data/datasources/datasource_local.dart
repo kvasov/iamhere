@@ -15,7 +15,6 @@ class SettingsLocalDataSourceImpl implements SettingsLocalDataSource {
 
   @override
   Future<void> saveThemeMode(ThemeMode themeMode) async {
-    debugPrint('SettingsLocalDataSourceImpl: saveThemeMode: $themeMode');
     try {
       await _secureStorage.write(
         key: 'theme_mode',
@@ -46,7 +45,6 @@ class SettingsLocalDataSourceImpl implements SettingsLocalDataSource {
 
   @override
   Future<void> saveLanguageCode(String languageCode) async {
-    debugPrint('🇷🇺🇺🇸 SettingsLocalDataSourceImpl: saveLanguageCode: $languageCode');
     await _secureStorage.write(key: 'language_code', value: languageCode);
   }
 
@@ -54,11 +52,9 @@ class SettingsLocalDataSourceImpl implements SettingsLocalDataSource {
   Future<String> getLanguageCode() async {
     final language_code = await _secureStorage.read(key: 'language_code');
     if (language_code != null) {
-      debugPrint('🇷🇺🇺🇸 SettingsLocalDataSourceImpl: language_code found: $language_code');
       return language_code;
     } else {
       saveLanguageCode('ru');
-      debugPrint('🇷🇺🇺🇸 SettingsLocalDataSourceImpl: language_code not found, saving default language code: ru');
       return 'ru';
     }
   }

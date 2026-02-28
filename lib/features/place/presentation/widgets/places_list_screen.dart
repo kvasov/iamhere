@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
-import 'package:iamhere/features/place/presentation/bloc/places_bloc.dart';
+import 'package:iamhere/features/place/presentation/bloc/place_screen/places_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iamhere/core/constants/host.dart';

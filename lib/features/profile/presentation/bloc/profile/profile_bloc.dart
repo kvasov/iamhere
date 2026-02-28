@@ -1,8 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart';
-import 'package:iamhere/core/di/injection_container.dart';
 import 'package:iamhere/shared/data/user/repositories/user_repository.dart';
-import 'package:iamhere/shared/data/fcm/fcm_local_datasource.dart';
 
 part 'profile_event.dart';
 part 'profile_state.dart';
@@ -19,7 +17,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   }
 
   Future<void> _onProfileLoadEvent(ProfileLoadEvent event, Emitter<ProfileState> emit) async {
-    debugPrint('🤍⚡️ ProfileBloc _onProfileLoadEvent');
     // Сохраняем текущее состояние isAuth перед загрузкой
     emit(ProfileLoading());
 
@@ -38,7 +35,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         return;
       } else {
         try {
-          debugPrint('💚💚💚 ProfileBloc _onProfileLoadEvent updateUserFcmToken');
           await userRepository.updateUserFcmToken();
           emit(ProfileLoaded(
             isAuth: true,
@@ -65,10 +61,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   Future<void> _onProfileSignOutEvent(ProfileSignOutEvent event, Emitter<ProfileState> emit) async {
     final result = await userRepository.signOut();
     if (result.isSuccess) {
-      debugPrint('💚 ProfileBloc _onProfileSignOutEvent success');
       emit(ProfileLoaded(isAuth: false));
     } else {
-      debugPrint('❌ ProfileBloc _onProfileSignOutEvent error: ${result.error?.description}');
       emit(ProfileLoaded(isAuth: true));
     }
   }

@@ -69,7 +69,6 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     Emitter<SignInState> emit,
   ) async {
     try {
-      debugPrint('🩵 SignInBloc: проверка токена');
       final savedToken = await userRepository.getUserToken();
 
       if (savedToken != null && savedToken.isNotEmpty) {
@@ -77,7 +76,6 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
         // если срок действия токена истек, то ....
         // profileBloc.add(ProfileSetIsAuthEvent(isAuth: true));
         profileBloc.add(ProfileLoadEvent());
-        // debugPrint('✅✅✅ SignInBloc: токен найден, пользователь авторизован');
       } else {
         debugPrint('ℹ️ SignInBloc: токен не найден, пользователь не авторизован');
       }

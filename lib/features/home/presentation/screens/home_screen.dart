@@ -3,7 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:iamhere/app/i18n/strings.g.dart';
 import 'package:go_router/go_router.dart';
-import 'package:iamhere/features/place/presentation/bloc/places_bloc.dart';
+import 'package:iamhere/features/place/presentation/bloc/place_screen/places_bloc.dart';
 import 'package:iamhere/features/place/presentation/widgets/places_list_screen.dart';
 import 'package:iamhere/core/di/injection_container.dart' as di;
 import 'package:flutter_bloc/flutter_bloc.dart';

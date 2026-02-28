@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:iamhere/shared/extensions/widget_animate_extensions.dart';
 import 'package:iamhere/features/profile/presentation/widgets/profile/text_field_widget.dart';
-import 'package:iamhere/shared/utils/geolocator.dart';
-import 'package:iamhere/shared/data/geo/datasources/remote/geo_remote_datasource.dart';
+import 'package:iamhere/features/place/presentation/widgets/new_place_form/map_section/map_section.dart';
+import 'package:iamhere/features/place/presentation/bloc/new_place_form/new_place_bloc.dart';
 
 class PlaceForm extends StatefulWidget {
-  const PlaceForm({super.key});
+  const PlaceForm({super.key, required this.mapInteractionNotifier});
+  final ValueNotifier<bool> mapInteractionNotifier;
 
   @override
   State<PlaceForm> createState() => _PlaceFormState();
@@ -14,125 +16,126 @@ class PlaceForm extends StatefulWidget {
 
 class _PlaceFormState extends State<PlaceForm> {
   final TextEditingController placeNameController = TextEditingController();
-  final TextEditingController placeDescriptionController = TextEditingController();
+  final TextEditingController placeDescriptionController =
+      TextEditingController();
   final TextEditingController placeCountryController = TextEditingController();
   final TextEditingController placeAddressController = TextEditingController();
 
   @override
+  void dispose() {
+    placeNameController.dispose();
+    placeDescriptionController.dispose();
+    placeCountryController.dispose();
+    placeAddressController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
-    return Form(
-      key: formKey,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextFieldWidget(
-              hintText: 'Place Name',
-              prefixIcon: Icons.account_balance_sharp,
-              controller: placeNameController,
-              staggerIndex: 0,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Place Name is required';
-                }
-                return null;
-              },
+    final bloc = context.read<NewPlaceBloc>();
+
+    return BlocConsumer<NewPlaceBloc, NewPlaceState>(
+      listener: (context, state) {
+        if (state is NewPlaceFailure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              behavior: SnackBarBehavior.floating,
+              content: Text(state.message),
+              backgroundColor: Colors.red,
             ),
-            TextFieldWidget(
-              hintText: 'Place Description',
-              prefixIcon: Icons.description,
-              controller: placeDescriptionController,
-              staggerIndex: 1,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Place Description is required';
-                }
-                return null;
-              },
-            ),
-            TextFieldWidget(
-              hintText: 'Place Country',
-              prefixIcon: Icons.public,
-              controller: placeCountryController,
-              staggerIndex: 2,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Place Country is required';
-                }
-                return null;
-              },
-            ),
-            TextFieldWidget(
-              hintText: 'Place Address',
-              prefixIcon: Icons.location_city,
-              controller: placeAddressController,
-              staggerIndex: 3,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Place Address is required';
-                }
-                return null;
-              },
-            ),
-            Column(
-              crossAxisAlignment: .start,
+          );
+        }
+      },
+      builder: (context, state) {
+        return Form(
+          key: formKey,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 200),
+            child: Column(
               children: [
-                Text('Coordinates', style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal)),
-                SizedBox(height: 8),
-                Row(
-                  spacing: 0,
-                  mainAxisAlignment: .spaceBetween,
-                  children: [
-                    TextButton(
-                      onPressed: () async {
-                        debugPrint('Моё местоположение');
-                        final position = await determinePosition();
-                        debugPrint('📍📍📍 Position: $position');
-                        // final address = await GeoRemoteDataSourceImpl().getAddressByCoordinates(position.latitude.toString(), position.longitude.toString());
-                        // debugPrint('Address: ${address['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']['metaDataProperty']['GeocoderMetaData']['text']}');
-                      },
-                      child: Text('Моё местоположение'),
-                      style: TextButton.styleFrom(
-                        padding: .symmetric(horizontal: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        textStyle: TextStyle(fontSize: 14, fontWeight: .normal),
-                        foregroundColor: Colors.white,
-                        backgroundColor: Colors.black,
-                      ),
+                TextFieldWidget(
+                  hintText: 'Place Name',
+                  prefixIcon: Icons.account_balance_sharp,
+                  controller: placeNameController,
+                  staggerIndex: 0,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Place Name is required';
+                    }
+                    return null;
+                  },
+                  onChanged: (value) =>
+                      bloc.add(NewPlaceNameChanged(value)),
+                ),
+                TextFieldWidget(
+                  hintText: 'Place Description',
+                  prefixIcon: Icons.description,
+                  controller: placeDescriptionController,
+                  staggerIndex: 1,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Place Description is required';
+                    }
+                    return null;
+                  },
+                  onChanged: (value) =>
+                      bloc.add(NewPlaceDescriptionChanged(value)),
+                ),
+                TextFieldWidget(
+                  hintText: 'Place Country',
+                  prefixIcon: Icons.public,
+                  controller: placeCountryController,
+                  staggerIndex: 2,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Place Country is required';
+                    }
+                    return null;
+                  },
+                  onChanged: (value) =>
+                      bloc.add(NewPlaceCountryChanged(value)),
+                ),
+                TextFieldWidget(
+                  hintText: 'Place Address',
+                  prefixIcon: Icons.location_city,
+                  controller: placeAddressController,
+                  staggerIndex: 3,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Place Address is required';
+                    }
+                    return null;
+                  },
+                  onChanged: (value) =>
+                      bloc.add(NewPlaceAddressChanged(value)),
+                ),
+                MapSection(
+                  mapInteractionNotifier: widget.mapInteractionNotifier,
+                  onCoordinatesSelected: (lat, lon) => bloc.add(
+                    NewPlaceCoordinatesChanged(
+                      latitude: lat,
+                      longitude: lon,
                     ),
-                    TextButton(
-                      onPressed: () {
-                      debugPrint('Выбрать на карте');
-                      },
-                      child: Text('Выбрать на карте'),
-                      style: TextButton.styleFrom(
-                        padding: .symmetric(horizontal: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        textStyle: TextStyle(fontSize: 14, fontWeight: .normal),
-                        foregroundColor: Colors.white,
-                        backgroundColor: Colors.black,
-                      ),
-                    ),
-                  ],
-                )
-              ]
-            ).formFieldAnimate(staggerIndex: 4),
-            SizedBox(height: 16),
-            GFButton(
-              text: 'Create Place',
-              color: GFColors.PRIMARY,
-              onPressed: () {
-                debugPrint('Create Place');
-              },
-            ).formFieldAnimate(staggerIndex: 5),
-          ],
-        ),
-      ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                GFButton(
+                  text: state is NewPlaceLoading ? 'Создание...' : 'Create Place',
+                  color: GFColors.PRIMARY,
+                  onPressed: state is NewPlaceLoading
+                      ? null
+                      : () {
+                          if (formKey.currentState?.validate() ?? false) {
+                            bloc.add(NewPlaceSubmitted());
+                          }
+                        },
+                ).formFieldAnimate(staggerIndex: 5),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

@@ -1,7 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
 
-import 'package:iamhere/features/place/presentation/bloc/places_bloc.dart';
+import 'package:iamhere/features/place/presentation/bloc/place_screen/places_bloc.dart';
 import 'package:iamhere/features/place/data/datasources/places_datasource.dart';
 import 'package:iamhere/features/place/data/repositories/places_repository_impl.dart';
 
@@ -20,6 +20,7 @@ import 'package:iamhere/features/profile/presentation/bloc/sign_up/sign_up_bloc.
 import 'package:iamhere/core/constants/host.dart';
 import 'package:iamhere/features/user/presentation/bloc/user_bloc/user_bloc.dart';
 import 'package:iamhere/features/user/presentation/bloc/subscription_bloc/subscription_bloc.dart';
+import 'package:iamhere/features/place/presentation/bloc/new_place_form/new_place_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -55,6 +56,7 @@ Future<void> initDI() async {
   sl.registerFactory(() => SubscriptionBloc(
     userRepository: sl<UserRepository>(),
   ));
+  sl.registerFactory(() => NewPlaceBloc(placesRepository: sl<PlacesRepository>()));
 
   sl.registerLazySingleton<PlacesRepository>(() => PlacesRepository(
     userLocalDataSource: sl<UserLocalDataSource>(),

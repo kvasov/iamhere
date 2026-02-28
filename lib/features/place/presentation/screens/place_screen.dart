@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:iamhere/features/place/presentation/bloc/places_bloc.dart';
+import 'package:iamhere/features/place/presentation/bloc/place_screen/places_bloc.dart';
 import 'package:iamhere/features/place/presentation/widgets/place_screen/photos.dart';
 import 'package:iamhere/features/place/presentation/widgets/place_screen/description.dart';
 import 'package:iamhere/features/place/presentation/widgets/place_screen/reviews.dart';

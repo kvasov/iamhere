@@ -137,7 +137,6 @@ class ScaffoldWithBottomAppBar extends StatelessWidget {
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             context.go('/add-place');
-            debugPrint('🔔 show add place!!!');
           },
           shape: CircleBorder(),
           elevation: 0,

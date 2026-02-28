@@ -116,7 +116,7 @@ GoRoute buildRoute({
     path: path,
     name: name,
     pageBuilder: (context, state) {
-      debugPrint('🔵 buildRoute: path=$path, showBottomNavBar=$showBottomNavBar, matchedLocation=${state.matchedLocation}');
+      // debugPrint('🔵 buildRoute: path=$path, showBottomNavBar=$showBottomNavBar, matchedLocation=${state.matchedLocation}');
       return AppTransitionPage(
         key: state.pageKey,
         child: child,
@@ -158,7 +158,7 @@ class AppRouter {
     initialLocation: '/splash',
     refreshListenable: GoRouterRefreshStream(profileBloc.stream),
     redirect: (context, state) {
-      debugPrint('🔵🔵🔵🔵🔵🔵 redirect: ${state.matchedLocation}, profileState: ${profileBloc.state}');
+      // debugPrint('🔵🔵🔵🔵🔵🔵 redirect: ${state.matchedLocation}, profileState: ${profileBloc.state}');
       final profileState = profileBloc.state;
 
       final isGoingToSplash = state.matchedLocation == '/splash';
@@ -318,7 +318,7 @@ class GoRouterRefreshStream extends ChangeNotifier {
   GoRouterRefreshStream(Stream stream) {
     notifyListeners();
     _subscription = stream.asBroadcastStream().listen((state) {
-      debugPrint('GoRouterRefreshStream: state changed to $state');
+      // debugPrint('GoRouterRefreshStream: state changed to $state');
       notifyListeners();
     });
   }

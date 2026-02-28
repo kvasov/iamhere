@@ -8,6 +8,7 @@ class TextFieldWidget extends StatefulWidget {
   final IconData prefixIcon;
   final TextEditingController controller;
   final String? Function(String?)? validator;
+  final void Function(String)? onChanged;
   final bool obscureText;
 
   const TextFieldWidget({
@@ -17,6 +18,7 @@ class TextFieldWidget extends StatefulWidget {
     required this.controller,
     required this.validator,
     required this.staggerIndex,
+    this.onChanged,
     this.obscureText = false,
   });
 
@@ -54,6 +56,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
       ),
       controller: widget.controller,
       validator: widget.validator,
+      onChanged: widget.onChanged,
     ).formFieldAnimate(staggerIndex: widget.staggerIndex);
   }
 }
