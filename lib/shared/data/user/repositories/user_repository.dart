@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 import '../datasources/local/user_local_datasource.dart';
 import '../datasources/remote/user_remote_datasource.dart';
 import 'package:iamhere/shared/data/fcm/fcm_local_datasource.dart';
@@ -113,7 +111,7 @@ class UserRepository {
   }
 
   RequestOperation<Map<String, dynamic>> updateUserInfo({
-    required String userId,
+    required int userId,
     required String name,
     required String password,
     required String passwordConfirm,
@@ -124,7 +122,14 @@ class UserRepository {
       return Result.error(Failure(description: 'No token found'));
     }
     try {
-      final response = await userRemoteDataSource.updateUserInfo(token, userId, name, password, passwordConfirm, photoPath: photoPath);
+      final response = await userRemoteDataSource.updateUserInfo(
+        token,
+        userId,
+        name,
+        password,
+        passwordConfirm,
+        photoPath: photoPath,
+      );
       return Result.ok(response);
     } catch (e) {
       return Result.error(Failure(description: 'Failed to update user info: $e'));
@@ -164,7 +169,7 @@ class UserRepository {
   RequestOperation<Map<String, dynamic>> unSubscribeFromUser({
     required int userId,
   }) async {
-    debugPrint('🤍‼️ UserRepository unSubscribeFromUser - userId: $userId');
+    // debugPrint('🤍‼️ UserRepository unSubscribeFromUser - userId: $userId');
     final token = await userLocalDataSource.getUserToken();
     if (token == null) {
       return Result.error(Failure(description: 'No token found'));
@@ -208,44 +213,4 @@ class UserRepository {
       return Result.error(Failure(description: 'Failed to update user fcm token: $e'));
     }
   }
-
-  // @override
-  // Future<Either<Failure, bool>> isAuthenticated() async {
-  //   try {
-  //     final token = await authLocalDataSource.getCachedToken();
-  //     return Right(token != null);
-  //   } catch (e) {
-  //     return Left(CacheFailure());
-  //   }
-  // }
-
-  // @override
-  // Future<Either<Failure, UserEntity>> login({
-  //   required String email,
-  //   required String password,
-  // }) async {
-  //   try {
-  //     final user = await authRemoteDataSource.login(email, password);
-  //     await authLocalDataSource.cacheToken('mock_token_${user.id}');
-  //     await authLocalDataSource.cacheUser(user);
-  //     return Right(user);
-  //   } on InvalidCredentialsException {
-  //     return Left(InvalidCredentialsFailure());
-  //   } on ServerException {
-  //     return Left(ServerFailure());
-  //   } catch (e) {
-  //     return Left(ServerFailure());
-  //   }
-  // }
-
-  // @override
-  // Future<Either<Failure, void>> logout() async {
-  //   try {
-  //     await authRemoteDataSource.logout();
-  //     await authLocalDataSource.clearToken();
-  //     return Right(null);
-  //   } catch (e) {
-  //     return Left(ServerFailure());
-  //   }
-  // }
 }

@@ -66,8 +66,14 @@ class NewPlaceBloc extends Bloc<NewPlaceEvent, NewPlaceState> {
 
   void _onPhotoAdded(NewPlacePhotoAdded event, Emitter<NewPlaceState> emit) {
     final formData = _formDataFromState;
-    if (formData != null) {
-      emit(NewPlaceEditing(formData.copyWith(photos: [...formData.photos, event.photo])));
+    if (formData == null) return;
+    emit(NewPlaceEditing(formData.copyWith(photosLoading: true)));
+    final currentFormData = _formDataFromState;
+    if (currentFormData != null) {
+      emit(NewPlaceEditing(currentFormData.copyWith(
+        photos: [...currentFormData.photos, event.photo],
+        photosLoading: false,
+      )));
     }
   }
 

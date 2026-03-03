@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:getwidget/getwidget.dart';
 import 'package:iamhere/shared/extensions/widget_animate_extensions.dart';
 import 'package:iamhere/features/profile/presentation/widgets/profile/text_field_widget.dart';
 import 'package:iamhere/features/place/presentation/widgets/new_place_form/map_section/map_section.dart';
@@ -130,7 +129,7 @@ class _PlaceFormState extends State<PlaceForm> {
               ),
             ),
             const SizedBox(height: 16),
-            const PhotosSection(),
+            PhotosSection(state: widget.state),
             TextButton(
               onPressed: () {
                 _validateAndScroll();

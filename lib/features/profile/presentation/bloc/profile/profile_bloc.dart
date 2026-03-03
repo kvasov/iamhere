@@ -38,7 +38,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           await userRepository.updateUserFcmToken();
           emit(ProfileLoaded(
             isAuth: true,
-            userId: userInfo?['id'].toString(),
+            userId: userInfo?['id'],
             login: userInfo?['login'],
             name: userInfo?['name'],
             email: userInfo?['email'],
@@ -72,7 +72,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     emit(current?.copyWith(status: ProfileStatus.saving) ?? ProfileLoading());
 
     final result = await userRepository.updateUserInfo(
-      userId: current?.userId ?? '',
+      userId: current?.userId ?? 0,
       name: event.name,
       password: event.password,
       passwordConfirm: event.passwordConfirm,

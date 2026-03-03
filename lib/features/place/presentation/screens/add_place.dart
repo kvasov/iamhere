@@ -42,9 +42,6 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
             );
           },
           child: BlocConsumer<NewPlaceBloc, NewPlaceState>(
-            buildWhen: (previous, current) =>
-                identical(previous, current) ||
-                previous.runtimeType != current.runtimeType,
             listener: (context, state) {
               if (state is NewPlaceSuccess) {
                 Future.delayed(const Duration(seconds: 3), () {

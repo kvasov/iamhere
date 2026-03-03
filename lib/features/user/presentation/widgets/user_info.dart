@@ -8,7 +8,7 @@ class UserInfo extends StatelessWidget {
   final int userId;
   final String name;
   final String photoPath;
-  final String profileId;
+  final int profileId;
 
   const UserInfo({
     super.key,
@@ -58,7 +58,7 @@ class UserInfo extends StatelessWidget {
               Column(
                 crossAxisAlignment: .start,
                 children: [
-                  Text(name),
+                  Text("$name ($userId), profileId: $profileId"),
                   if (profileId == userId)
                     Text('Это вы', style: TextStyle(color: Colors.green))
                   else

@@ -9,7 +9,7 @@ abstract class UserRemoteDataSource {
   Future<Map<String, dynamic>> signUp(String name, String login, String email, String password, String photoPath);
   Future<bool> signOut(String token);
   Future<Map<String, dynamic>> getUserInfo(String token);
-  Future<Map<String, dynamic>> updateUserInfo(String token, String userId, String name, String password, String passwordConfirm, {String? photoPath});
+  Future<Map<String, dynamic>> updateUserInfo(String token, int userId, String name, String password, String passwordConfirm, {String? photoPath});
   Future<Map<String, dynamic>> getUserInfoById(String token, int userId);
   Future<Map<String, dynamic>> updateUserFcmToken(String token, String fcmToken);
   Future<Map<String, dynamic>> subscribeToUser(String token, int userId);
@@ -109,7 +109,7 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   @override
   Future<Map<String, dynamic>> updateUserInfo(
     String token,
-    String userId,
+    int userId,
     String name,
     String password,
     String passwordConfirm,

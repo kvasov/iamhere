@@ -12,7 +12,7 @@ final class ProfileLoading extends ProfileState {}
 final class ProfileTokenExpired extends ProfileState {}
 
 final class ProfileLoaded extends ProfileState {
-  final String? userId;
+  final int? userId;
   final String? login;
   final String? name;
   final String? email;
@@ -31,7 +31,7 @@ final class ProfileLoaded extends ProfileState {
   });
 
   ProfileLoaded copyWith({
-    String? userId,
+    int? userId,
     String? login,
     String? name,
     String? email,

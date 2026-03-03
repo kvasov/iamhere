@@ -88,7 +88,7 @@ class UserView extends StatelessWidget {
                       userId: state.userData['id'],
                       name: state.userData['name'] ?? '',
                       photoPath: state.userData['photoPath'] ?? '',
-                      profileId: profileLoaded?.userId ?? '',
+                      profileId: profileLoaded!.userId!,
                     ),
                   ),
                 ],
