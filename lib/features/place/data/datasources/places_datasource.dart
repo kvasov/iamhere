@@ -1,14 +1,25 @@
+import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:iamhere/core/di/injection_container.dart';
 import 'package:iamhere/features/place/data/models/place_dto.dart';
 import 'package:iamhere/features/place/domain/entities/place.dart';
 
-abstract class PlacesListRemoteDataSource {
+abstract class PlacesRemoteDataSource {
   Future<List<PlaceModel>> getPlaces(String? token);
   Future<PlaceModel> getPlace(String? token, String placeId);
+  Future<Map<String, dynamic>> createPlace(
+    String? token,
+    String name,
+    String description,
+    String country,
+    String address,
+    double latitude,
+    double longitude,
+    List<String> photos,
+  );
 }
 
-class PlacesListRemoteDataSourceImpl implements PlacesListRemoteDataSource {
+class PlacesRemoteDataSourceImpl implements PlacesRemoteDataSource {
   @override
   Future<List<PlaceModel>> getPlaces(String? token) async {
     final Dio dio = sl<Dio>();
@@ -38,6 +49,49 @@ class PlacesListRemoteDataSourceImpl implements PlacesListRemoteDataSource {
     );
 
     return PlaceModel.fromDto(PlaceDTO.fromJson(response.data as Map<String, dynamic>));
+  }
+
+  @override
+  Future<Map<String, dynamic>> createPlace(
+    String? token,
+    String name,
+    String description,
+    String country,
+    String address,
+    double latitude,
+    double longitude,
+    List<String> photos,
+  ) async {
+    final Dio dio = sl<Dio>();
+    final formData = FormData.fromMap({
+      'name': name,
+      'description': description,
+      'country': country,
+      'address': address,
+      'latitude': latitude,
+      'longitude': longitude,
+    });
+
+    for (final String photoPath in photos) {
+      formData.files.add(
+        MapEntry(
+          'photos',
+          await MultipartFile.fromFile(photoPath),
+        ),
+      );
+    }
+
+    final response = await dio.post(
+      '/api/places',
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $token'
+        }
+      ),
+      data: formData,
+    );
+
+    return response.data;
   }
 }
 

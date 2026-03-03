@@ -60,10 +60,10 @@ Future<void> initDI() async {
 
   sl.registerLazySingleton<PlacesRepository>(() => PlacesRepository(
     userLocalDataSource: sl<UserLocalDataSource>(),
-    placesRemoteDataSource: sl<PlacesListRemoteDataSource>(),
+    placesRemoteDataSource: sl<PlacesRemoteDataSource>(),
   ));
 
-  sl.registerLazySingleton<PlacesListRemoteDataSource>(() => PlacesListRemoteDataSourceImpl());
+  sl.registerLazySingleton<PlacesRemoteDataSource>(() => PlacesRemoteDataSourceImpl());
 
   sl.registerLazySingleton<GeoRemoteDataSource>(() => GeoRemoteDataSourceImpl(sl<Dio>()));
 

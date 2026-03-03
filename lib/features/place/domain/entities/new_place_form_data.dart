@@ -14,6 +14,7 @@ class NewPlaceFormData extends Equatable {
     this.address = '',
     this.latitude,
     this.longitude,
+    this.photos = const [],
   });
 
   final String name;
@@ -22,6 +23,7 @@ class NewPlaceFormData extends Equatable {
   final String address;
   final double? latitude;
   final double? longitude;
+  final List<String> photos;
 
   NewPlaceFormData copyWith({
     String? name,
@@ -30,6 +32,7 @@ class NewPlaceFormData extends Equatable {
     String? address,
     Object? latitude = _keep,
     Object? longitude = _keep,
+    List<String>? photos,
   }) {
     return NewPlaceFormData(
       name: name ?? this.name,
@@ -38,11 +41,12 @@ class NewPlaceFormData extends Equatable {
       address: address ?? this.address,
       latitude: identical(latitude, _keep) ? this.latitude : latitude as double?,
       longitude: identical(longitude, _keep) ? this.longitude : longitude as double?,
+      photos: photos ?? this.photos,
     );
   }
 
   static NewPlaceFormData get initial => const NewPlaceFormData();
 
   @override
-  List<Object?> get props => [name, description, country, address, latitude, longitude];
+  List<Object?> get props => [name, description, country, address, latitude, longitude, photos];
 }

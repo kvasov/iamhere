@@ -8,7 +8,12 @@ class AvatarWidget extends StatefulWidget {
   final Function(String?) onPhotoSelected;
   final String? selectedPhotoPath;
 
-  const AvatarWidget({super.key, this.photoPath, required this.onPhotoSelected, this.selectedPhotoPath});
+  const AvatarWidget({
+    super.key,
+    this.photoPath,
+    required this.onPhotoSelected,
+    this.selectedPhotoPath
+  });
 
   @override
   State<AvatarWidget> createState() => _AvatarWidgetState();

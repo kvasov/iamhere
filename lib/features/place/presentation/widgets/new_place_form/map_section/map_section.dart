@@ -26,6 +26,11 @@ class _MapSectionState extends State<MapSection> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: .start,

@@ -18,6 +18,8 @@ class NewPlaceBloc extends Bloc<NewPlaceEvent, NewPlaceState> {
     on<NewPlaceAddressChanged>(_onAddressChanged);
     on<NewPlaceCoordinatesChanged>(_onCoordinatesChanged);
     on<NewPlaceSubmitted>(_onNewPlaceSubmitted);
+    on<NewPlacePhotoAdded>(_onPhotoAdded);
+    on<NewPlacePhotoRemoved>(_onPhotoRemoved);
   }
 
   void _onNameChanged(NewPlaceNameChanged event, Emitter<NewPlaceState> emit) {
@@ -62,6 +64,20 @@ class NewPlaceBloc extends Bloc<NewPlaceEvent, NewPlaceState> {
     }
   }
 
+  void _onPhotoAdded(NewPlacePhotoAdded event, Emitter<NewPlaceState> emit) {
+    final formData = _formDataFromState;
+    if (formData != null) {
+      emit(NewPlaceEditing(formData.copyWith(photos: [...formData.photos, event.photo])));
+    }
+  }
+
+  void _onPhotoRemoved(NewPlacePhotoRemoved event, Emitter<NewPlaceState> emit) {
+    final formData = _formDataFromState;
+    if (formData != null) {
+      emit(NewPlaceEditing(formData.copyWith(photos: formData.photos.where((photo) => photo != event.photo).toList())));
+    }
+  }
+
   NewPlaceFormData? get _formDataFromState {
     return switch (state) {
       NewPlaceEditing(formData: final f) => f,
@@ -99,16 +115,29 @@ class NewPlaceBloc extends Bloc<NewPlaceEvent, NewPlaceState> {
           message: 'Coordinates are required', formData: formData));
       return;
     }
+    if (formData.photos.isEmpty) {
+      emit(NewPlaceFailure(
+          message: 'At least one photo is required', formData: formData));
+      return;
+    }
 
     emit(NewPlaceLoading(formData));
 
     try {
-      // TODO: вызвать userRepository / placesRepository для создания места
-      // final result = await ...;
-      // if (result.isSuccess) emit(NewPlaceSuccess(placeData: result.data!));
-      // else emit(NewPlaceFailure(message: ..., formData: formData));
-      debugPrint('🔍 NewPlaceBloc: FormData: $formData');
-      emit(NewPlaceEditing(formData));
+      final result = await placesRepository.createPlace(
+        name: formData.name,
+        description: formData.description,
+        country: formData.country,
+        address: formData.address,
+        latitude: formData.latitude!,
+        longitude: formData.longitude!,
+        photos: formData.photos,
+      );
+      if (result.isSuccess) {
+        emit(NewPlaceSuccess(placeData: result.data ?? {}));
+      } else {
+        emit(NewPlaceFailure(message: result.error?.description ?? 'Failed to create place', formData: formData));
+      }
     } catch (e) {
       debugPrint('NewPlaceBloc: error: $e');
       emit(NewPlaceFailure(

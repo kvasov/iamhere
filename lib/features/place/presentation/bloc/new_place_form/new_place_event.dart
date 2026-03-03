@@ -29,5 +29,15 @@ final class NewPlaceCoordinatesChanged extends NewPlaceEvent {
   NewPlaceCoordinatesChanged({this.latitude, this.longitude});
 }
 
+final class NewPlacePhotoAdded extends NewPlaceEvent {
+  final String photo;
+  NewPlacePhotoAdded(this.photo);
+}
+
+final class NewPlacePhotoRemoved extends NewPlaceEvent {
+  final String photo;
+  NewPlacePhotoRemoved(this.photo);
+}
+
 /// Отправка формы. Данные берутся из текущего состояния bloc.
 final class NewPlaceSubmitted extends NewPlaceEvent {}
