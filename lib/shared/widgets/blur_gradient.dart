@@ -5,12 +5,14 @@ class BlurGradientWidget extends StatelessWidget {
   final double height;
   final double sigma;
   final double opacity;
+  final Color color;
 
   const BlurGradientWidget({
     super.key,
     required this.height,
     required this.sigma,
     required this.opacity,
+    required this.color,
   });
 
   @override
@@ -28,6 +30,7 @@ class BlurGradientWidget extends StatelessWidget {
           return BlurLayerWidget(
             sigma: sigma,
             opacity: opacity,
+            color: color,
           );
         }),
       ),

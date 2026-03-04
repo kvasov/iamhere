@@ -44,7 +44,12 @@ class ScaffoldWithBottomAppBar extends StatelessWidget {
 
     return Stack(
       children: [
-        BlurGradientWidget(height: 60, sigma: 10, opacity: 0.0),
+        BlurGradientWidget(
+          height: 60,
+          sigma: 10,
+          opacity: 0.5,
+          color: Color.fromRGBO(184, 184, 184, 1)
+        ),
         SafeArea(
           child: BottomAppBar(
             shape: IslandSmoothBezierNotchedShape(
@@ -57,7 +62,7 @@ class ScaffoldWithBottomAppBar extends StatelessWidget {
             notchMargin: 6,
             height: 48,
             padding: EdgeInsets.only(top: 0, bottom: 0),
-            color: Color.fromARGB(255, 35, 73, 145),
+            color: Color.fromRGBO(22, 48, 96, 1),
             elevation: 0,
             child: Padding(
               padding: const .symmetric(horizontal: 24.0),
@@ -140,8 +145,8 @@ class ScaffoldWithBottomAppBar extends StatelessWidget {
           },
           shape: CircleBorder(),
           elevation: 0,
-          backgroundColor: Color.fromRGBO(152, 182, 237, 1),
-          child: const Icon(Icons.add),
+          backgroundColor: Color.fromRGBO(22, 48, 96, 1),
+          child: const Icon(Icons.add, color: Colors.white),
         ),
         // Используем BottomAppBar виджет внутри bottomNavigationBar
         bottomNavigationBar: _buildBottomAppBar(context),
