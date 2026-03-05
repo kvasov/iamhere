@@ -148,6 +148,8 @@ GoRoute buildRouteWithState({
   );
 }
 
+final _rootNavigatorKey = GlobalKey<NavigatorState>();
+
 /// Конфигурация маршрутов приложения
 class AppRouter {
   final ProfileBloc profileBloc;
@@ -155,6 +157,7 @@ class AppRouter {
   AppRouter({required this.profileBloc, this.splashHasBeenShown = false});
 
   GoRouter get router => GoRouter(
+    navigatorKey: _rootNavigatorKey,
     initialLocation: '/splash',
     refreshListenable: GoRouterRefreshStream(profileBloc.stream),
     redirect: (context, state) {
