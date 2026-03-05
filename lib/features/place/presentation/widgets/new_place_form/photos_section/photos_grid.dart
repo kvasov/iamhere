@@ -1,6 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:iamhere/features/place/presentation/bloc/new_place_form/new_place_bloc.dart';
-import 'dart:io';
+import 'package:iamhere/shared/widgets/explodable_widget.dart';
 
 class PhotosGrid extends StatelessWidget {
   const PhotosGrid({
@@ -31,25 +33,27 @@ class PhotosGrid extends StatelessWidget {
           ),
           itemCount: photos.length,
           itemBuilder: (context, index) {
-            return Stack(
-              children: [
-                Image.file(
-                  width: .infinity,
-                  height: .infinity,
-                  File(photos[index]),
-                  fit: .cover,
-                ),
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  child: IconButton(
-                    onPressed: () {
-                      bloc.add(NewPlacePhotoRemoved(photos[index]));
-                    },
-                    icon: const Icon(Icons.close, color: Colors.white),
+            return ExplodableWidget(
+              key: ValueKey(photos[index]),
+              onExploded: () => bloc.add(NewPlacePhotoRemoved(photos[index])),
+              builder: (triggerExplode) => Stack(
+                children: [
+                  Image.file(
+                    width: .infinity,
+                    height: .infinity,
+                    File(photos[index]),
+                    fit: .cover,
                   ),
-                ),
-              ],
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    child: IconButton(
+                      onPressed: triggerExplode,
+                      icon: const Icon(Icons.close, color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
             );
           },
         ),
