@@ -30,7 +30,16 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
-          leading: Icon(Icons.arrow_back),
+          leading: IconButton(
+            onPressed: () {
+              if (context.canPop()) {
+                context.pop();
+              } else {
+                context.go('/home');
+              }
+            },
+            icon: Icon(Icons.arrow_back),
+          ),
           title: Text('Add Place'),
         ),
         body: ValueListenableBuilder<bool>(

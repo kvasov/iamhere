@@ -77,7 +77,8 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
         // profileBloc.add(ProfileSetIsAuthEvent(isAuth: true));
         profileBloc.add(ProfileLoadEvent());
       } else {
-        debugPrint('ℹ️ SignInBloc: токен не найден, пользователь не авторизован');
+        // токен не найден, пользователь не авторизован
+        profileBloc.add(ProfileSetIsAuthEvent(isAuth: false));
       }
     } catch (e) {
       debugPrint('SignInBloc: ошибка при проверке токена: $e');

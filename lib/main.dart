@@ -27,7 +27,7 @@ void main() async {
   await initDI();
 
   final prefs = sl<SharedPreferences>();
-  final splashHasBeenShown = prefs.getBool('splash_has_been_shown') ?? false;
+  final introHasBeenShown = prefs.getBool('intro_has_been_shown') ?? false;
 
   // Создаем ThemeBloc и загружаем тему через событие
   final themeBloc = sl<ThemeBloc>();
@@ -57,14 +57,14 @@ void main() async {
           value: sl<UserBloc>(),
         ),
       ],
-      child: MainApp(splashHasBeenShown: splashHasBeenShown),
+      child: MainApp(introHasBeenShown: introHasBeenShown),
     ),
   );
 }
 
 class MainApp extends StatefulWidget {
-  const MainApp({super.key, required this.splashHasBeenShown});
-  final bool splashHasBeenShown;
+  const MainApp({super.key, required this.introHasBeenShown});
+  final bool introHasBeenShown;
 
   @override
   State<MainApp> createState() => _MainAppState();
@@ -82,7 +82,7 @@ class _MainAppState extends State<MainApp> {
 
     _router = AppRouter(
       profileBloc: profileBloc,
-      splashHasBeenShown: widget.splashHasBeenShown,
+      introHasBeenShown: widget.introHasBeenShown,
     ).router;
 
     _pushService = PushNotificationService(_router, sl<FcmLocalDataSource>());

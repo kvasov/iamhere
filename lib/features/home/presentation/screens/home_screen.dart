@@ -9,6 +9,7 @@ import 'package:iamhere/core/di/injection_container.dart' as di;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iamhere/features/profile/presentation/bloc/profile/profile_bloc.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:iamhere/features/profile/presentation/bloc/sign_in/sign_in_bloc.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -91,6 +92,9 @@ class HomeView extends StatelessWidget {
                 );
               }
             ),
+            Text('authState: ${context.read<SignInBloc>().state}'),
+            Text('profileState: ${context.read<ProfileBloc>().state}'),
+            Text('IsAuth: ${context.read<ProfileBloc>().state is ProfileLoaded ? (context.read<ProfileBloc>().state as ProfileLoaded).isAuth : false}'),
             SizedBox(
               height: MediaQuery.of(context).size.height - 100,
               child: PlacesListWidget(),

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iamhere/features/home/presentation/screens/home_screen.dart';
+import 'package:iamhere/features/intro/presentation/screens/intro_screen.dart';
 import 'package:iamhere/features/place/presentation/screens/place_screen.dart';
 import 'package:iamhere/features/place/presentation/screens/gallery_screen.dart';
 import 'package:iamhere/features/profile/presentation/screens/sign_in_screen.dart';
@@ -153,8 +154,11 @@ final _rootNavigatorKey = GlobalKey<NavigatorState>();
 /// Конфигурация маршрутов приложения
 class AppRouter {
   final ProfileBloc profileBloc;
-  final bool splashHasBeenShown;
-  AppRouter({required this.profileBloc, this.splashHasBeenShown = false});
+  final bool introHasBeenShown;
+  AppRouter({required this.profileBloc, this.introHasBeenShown = false});
+
+  /// true после того, как redirect уже отправил на /intro (чтобы не редиректить повторно)
+  bool _hasNavigatedToIntro = false;
 
   GoRouter get router => GoRouter(
     navigatorKey: _rootNavigatorKey,
@@ -169,6 +173,17 @@ class AppRouter {
       final isGoingToProfile = state.matchedLocation == '/profile';
       final isGoingToSignIn = state.matchedLocation == '/sign-in';
       final isGoingToSignUp = state.matchedLocation == '/sign-up';
+      final isGoingToIntro = state.matchedLocation == '/intro';
+
+      if (!introHasBeenShown) {
+        if (!_hasNavigatedToIntro) {
+          _hasNavigatedToIntro = true;
+          return '/intro';
+        }
+        // Уже на интро — разрешаем оставаться, не редиректим на sign-in
+        if (isGoingToIntro) return null;
+        // Иначе продолжаем проверки (при переходе на home отправим на sign-in)
+      }
 
       // Если токен истек — явно переходим на sign-in в следующем кадре,
       // т.к. возврат из redirect иногда не применяется (повторный вызов redirect возвращает null).
@@ -191,8 +206,10 @@ class AppRouter {
           return null;
         }
 
-        // Если splash уже был показан, то редиректим на sign-in
-        if (isGoingToSplash && splashHasBeenShown) {
+        // Если splash уже был показан — ждём результат проверки токена (ProfileInitial/ProfileLoading),
+        // не редиректим на sign-in пока профиль не загружен
+        if (isGoingToSplash && introHasBeenShown) {
+          if (profileState is ProfileInitial) return null;
           return '/sign-in';
         }
 
@@ -217,15 +234,15 @@ class AppRouter {
           return '/sign-in';
         }
         // Разрешаем доступ только к sign-in, sign-up и splash
-        if (isGoingToSignIn || isGoingToSplash || isGoingToSignUp) {
-          // debugPrint('🔵 redirect: isGoingToSignIn || isGoingToSplash || isGoingToSignUp');
-          // Если splash уже был показан, то редиректим на home
-          if (isGoingToSplash && splashHasBeenShown) {
-            // debugPrint('☎️ redirect: splashHasBeenShown = true, redirecting to home');
-            return '/home';
-          }
-          return null;
-        }
+        // if (isGoingToSignIn || isGoingToSplash || isGoingToSignUp) {
+        //   // debugPrint('🔵 redirect: isGoingToSignIn || isGoingToSplash || isGoingToSignUp');
+        //   // Если splash уже был показан, то редиректим на home
+        //   if (isGoingToSplash && introHasBeenShown) {
+        //     // debugPrint('☎️ redirect: splashHasBeenShown = true, redirecting to home');
+        //     return '/home';
+        //   }
+        //   return null;
+        // }
         // Редиректим на sign-in для всех остальных маршрутов
         return '/sign-in';
       }
@@ -242,6 +259,11 @@ class AppRouter {
       return null;
     },
     routes: [
+      buildRoute(
+        path: '/intro',
+        name: 'intro',
+        child: IntroScreen(),
+      ),
       buildRoute(
         path: '/splash',
         name: 'splash',

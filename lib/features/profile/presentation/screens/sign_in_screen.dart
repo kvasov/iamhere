@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:iamhere/core/di/injection_container.dart';
+import 'package:iamhere/core/di/injection_container.dart' as di;
 import 'package:iamhere/features/profile/presentation/bloc/profile/profile_bloc.dart';
 import 'package:iamhere/features/profile/presentation/bloc/sign_in/sign_in_bloc.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iamhere/features/profile/presentation/widgets/profile/text_field_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key, this.showTokenExpiredMessage = false});
@@ -51,7 +52,7 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<SignInBloc>(
-      create: (_) => sl<SignInBloc>(),
+      create: (_) => di.sl<SignInBloc>(),
       child: Builder(
         builder: (context) => Scaffold(
           appBar: AppBar(
@@ -152,6 +153,30 @@ class _SignInScreenState extends State<SignInScreen> {
                         context.go('/sign-up');
                       },
                       child: const Text('Sign Up'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        final prefs = di.sl<SharedPreferences>();
+                        prefs.clear();
+                      },
+                      child: const Text('Удалить все данные из shared_preferences'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        final prefs = di.sl<SharedPreferences>();
+                        print('🔔 all shared_preferences: ${prefs.getKeys()}');
+                        for (var key in prefs.getKeys()) {
+                          print('🔔 $key: ${prefs.get(key)}');
+                        }
+                      },
+                      child: const Text('Показать все данные из shared_preferences'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        final prefs = di.sl<SharedPreferences>();
+                        print('🔔 intro_has_been_shown: ${prefs.get('intro_has_been_shown')}');
+                      },
+                      child: const Text('Показать intro_has_been_shown'),
                     ),
                   ],
                 ),
